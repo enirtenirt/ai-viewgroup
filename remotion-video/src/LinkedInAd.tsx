@@ -42,21 +42,28 @@ const Box = ({
 
 const DashLine = ({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: number; y2: number }) => {
   const frame = useCurrentFrame();
-  const t = interpolate(frame, [ORG_DELAY, ORG_DELAY + 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const len = Math.hypot(x2 - x1, y2 - y1);
+  const op = interpolate(frame, [ORG_DELAY, ORG_DELAY + 14], [0, 0.85], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={C.line} strokeWidth={2}
-      strokeDasharray="5 6" strokeDashoffset={len - len * t} opacity={0.85} />
+      strokeDasharray="5 6" opacity={op} />
   );
 };
 
-const Dot = ({ x, y, color, glow = false }: { x: number; y: number; color: string; glow?: boolean }) => {
+// Dot that flows back and forth along a line segment
+const FlowingDot = ({
+  x1, y1, x2, y2, color, phase = 0, glow = false,
+}: { x1: number; y1: number; x2: number; y2: number; color: string; phase?: number; glow?: boolean }) => {
   const frame = useCurrentFrame();
-  const op = interpolate(frame, [ORG_DELAY + 12, ORG_DELAY + 28], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const pulse = 0.7 + 0.3 * Math.sin((frame - ORG_DELAY) * 0.15);
+  const op = interpolate(frame, [ORG_DELAY + 10, ORG_DELAY + 26], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  // ping-pong 0..1..0 over 90 frames
+  const period = 90;
+  const t = (frame + phase) % period;
+  const p = t < period / 2 ? t / (period / 2) : 1 - (t - period / 2) / (period / 2);
+  const x = x1 + (x2 - x1) * p;
+  const y = y1 + (y2 - y1) * p;
   return (
     <>
-      {glow && <circle cx={x} cy={y} r={9} fill={color} opacity={op * 0.25 * pulse} />}
+      {glow && <circle cx={x} cy={y} r={10} fill={color} opacity={op * 0.3} />}
       <circle cx={x} cy={y} r={5} fill={color} opacity={op} />
     </>
   );
@@ -80,13 +87,15 @@ export const LinkedInAd = () => {
   const bot1 = { x: cx - 140, y: 840 };
   const bot2 = { x: cx + 140, y: 840 };
 
-  // mid points for dots
-  const dotTopMid1 = { x: (top.x + mid1.x) / 2, y: (top.y + 28 + mid1.y - 28) / 2 };
-  const dotTopMid2 = { x: (top.x + mid2.x) / 2, y: (top.y + 28 + mid2.y - 28) / 2 };
-  const dotMidH = { x: cx, y: 740 }; // between mid1 and mid2
-  const dotMid1Bot1 = { x: mid1.x, y: (mid1.y + 28 + bot1.y - 28) / 2 };
-  const dotMid2Bot2 = { x: mid2.x, y: (mid2.y + 28 + bot2.y - 28) / 2 };
-  const dotBotH = { x: cx, y: 840 };
+  // Line endpoints (box edges) reused for flowing dots
+  const segs = {
+    topToMid1: { x1: top.x, y1: top.y + 28, x2: mid1.x, y2: mid1.y - 28 },
+    topToMid2: { x1: top.x, y1: top.y + 28, x2: mid2.x, y2: mid2.y - 28 },
+    midH: { x1: mid1.x + 110, y1: mid1.y, x2: mid2.x - 110, y2: mid2.y },
+    mid1ToBot1: { x1: mid1.x, y1: mid1.y + 28, x2: bot1.x, y2: bot1.y - 28 },
+    mid2ToBot2: { x1: mid2.x, y1: mid2.y + 28, x2: bot2.x, y2: bot2.y - 28 },
+    botH: { x1: bot1.x + 110, y1: bot1.y, x2: bot2.x - 110, y2: bot2.y },
+  };
 
   return (
     <AbsoluteFill style={{
@@ -129,24 +138,22 @@ export const LinkedInAd = () => {
         Bygd for konsern. Ikke tilpasset.
       </div>
 
-      {/* Org chart connection lines + dots */}
+      {/* Org chart connection lines + flowing dots */}
       <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
-        <DashLine x1={top.x} y1={top.y + 28} x2={mid1.x} y2={mid1.y - 28} />
-        <DashLine x1={top.x} y1={top.y + 28} x2={mid2.x} y2={mid2.y - 28} />
-        <DashLine x1={mid1.x + 110} y1={mid1.y} x2={mid2.x - 110} y2={mid2.y} />
-        <DashLine x1={mid1.x} y1={mid1.y + 28} x2={bot1.x} y2={bot1.y - 28} />
-        <DashLine x1={mid2.x} y1={mid2.y + 28} x2={bot2.x} y2={bot2.y - 28} />
-        <DashLine x1={bot1.x + 110} y1={bot1.y} x2={bot2.x - 110} y2={bot2.y} />
+        <DashLine {...segs.topToMid1} />
+        <DashLine {...segs.topToMid2} />
+        <DashLine {...segs.midH} />
+        <DashLine {...segs.mid1ToBot1} />
+        <DashLine {...segs.mid2ToBot2} />
+        <DashLine {...segs.botH} />
 
-        {/* Konsolideres = green (parent → child vertical/diagonal) */}
-        <Dot x={dotTopMid1.x} y={dotTopMid1.y} color={C.green} />
-        <Dot x={dotTopMid2.x} y={dotTopMid2.y} color={C.green} />
-        <Dot x={dotMid1Bot1.x} y={dotMid1Bot1.y} color={C.green} />
-        <Dot x={dotMid2Bot2.x} y={dotMid2Bot2.y} color={C.green} />
+        <FlowingDot {...segs.topToMid1} color={C.green} phase={0} />
+        <FlowingDot {...segs.topToMid2} color={C.green} phase={20} />
+        <FlowingDot {...segs.mid1ToBot1} color={C.green} phase={40} />
+        <FlowingDot {...segs.mid2ToBot2} color={C.green} phase={60} />
 
-        {/* Intercompany = turquoise (sibling horizontal) */}
-        <Dot x={dotMidH.x} y={dotMidH.y} color={C.turq} glow />
-        <Dot x={dotBotH.x} y={dotBotH.y} color={C.turq} glow />
+        <FlowingDot {...segs.midH} color={C.turq} phase={10} glow />
+        <FlowingDot {...segs.botH} color={C.turq} phase={50} glow />
       </svg>
 
       {/* Org chart boxes */}
