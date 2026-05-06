@@ -9,21 +9,23 @@ const C = {
   bg1: "#3D1547",
   bg2: "#581B66",
   card: "#2A0A33",
-  cardLight: "#B978F5",
   cardLighter: "#CC99FF",
   border: "#B978F5",
-  text: "#FFFFFF",
   light: "#CC99FF",
   yellow: "#FFC832",
   line: "#B978F5",
+  green: "#00D96A",
+  turq: "#00D9C8",
 };
 
+const ORG_DELAY = 60;
+
 const Box = ({
-  cx, cy, label, delay, fill, textColor,
-}: { cx: number; cy: number; label: string; delay: number; fill: string; textColor: string }) => {
+  cx, cy, label, fill, textColor,
+}: { cx: number; cy: number; label: string; fill: string; textColor: string }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const s = spring({ frame: frame - delay, fps, config: { damping: 18, stiffness: 140 } });
+  const s = spring({ frame: frame - ORG_DELAY, fps, config: { damping: 20, stiffness: 130 } });
   const w = 220, h = 56;
   return (
     <div style={{
@@ -31,16 +33,16 @@ const Box = ({
       background: fill, border: `1.5px solid ${C.border}`, borderRadius: 12,
       display: "flex", alignItems: "center", justifyContent: "center",
       color: textColor, fontSize: 16, fontWeight: 600, fontFamily: inter.fontFamily,
-      opacity: s, transform: `scale(${0.85 + s * 0.15})`,
+      opacity: s, transform: `scale(${0.92 + s * 0.08})`,
     }}>
       {label}
     </div>
   );
 };
 
-const DashLine = ({ x1, y1, x2, y2, delay }: { x1: number; y1: number; x2: number; y2: number; delay: number }) => {
+const DashLine = ({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: number; y2: number }) => {
   const frame = useCurrentFrame();
-  const t = interpolate(frame, [delay, delay + 18], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const t = interpolate(frame, [ORG_DELAY, ORG_DELAY + 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const len = Math.hypot(x2 - x1, y2 - y1);
   return (
     <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={C.line} strokeWidth={2}
@@ -48,13 +50,16 @@ const DashLine = ({ x1, y1, x2, y2, delay }: { x1: number; y1: number; x2: numbe
   );
 };
 
-const FlowDot = ({ x1, y1, x2, y2, delay, color }: { x1: number; y1: number; x2: number; y2: number; delay: number; color: string }) => {
+const Dot = ({ x, y, color, glow = false }: { x: number; y: number; color: string; glow?: boolean }) => {
   const frame = useCurrentFrame();
-  if (frame < delay) return null;
-  const t = (((frame - delay) % 50) / 50);
-  const x = x1 + (x2 - x1) * t;
-  const y = y1 + (y2 - y1) * t;
-  return <circle cx={x} cy={y} r={3.5} fill={color} opacity={1 - t * 0.5} />;
+  const op = interpolate(frame, [ORG_DELAY + 12, ORG_DELAY + 28], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const pulse = 0.7 + 0.3 * Math.sin((frame - ORG_DELAY) * 0.15);
+  return (
+    <>
+      {glow && <circle cx={x} cy={y} r={9} fill={color} opacity={op * 0.25 * pulse} />}
+      <circle cx={x} cy={y} r={5} fill={color} opacity={op} />
+    </>
+  );
 };
 
 export const LinkedInAd = () => {
@@ -65,16 +70,23 @@ export const LinkedInAd = () => {
   const eyebrowOp = interpolate(frame, [10, 25], [0, 1], { extrapolateRight: "clamp" });
   const headlineSp = spring({ frame: frame - 18, fps, config: { damping: 20 } });
   const subOp = interpolate(frame, [38, 55], [0, 1], { extrapolateRight: "clamp" });
-  const footerOp = interpolate(frame, [120, 140], [0, 1], { extrapolateRight: "clamp" });
+  const legendOp = interpolate(frame, [ORG_DELAY + 20, ORG_DELAY + 40], [0, 1], { extrapolateRight: "clamp" });
+  const footerOp = interpolate(frame, [140, 160], [0, 1], { extrapolateRight: "clamp" });
 
-  // Org chart positions (canvas 1080x1080)
   const cx = 540;
   const top = { x: cx, y: 620 };
-  const mid1 = { x: cx - 130, y: 730 };
-  const mid2 = { x: cx + 130, y: 730 };
-  const bot1 = { x: cx - 130, y: 820 };
-  const bot2 = { x: cx + 130, y: 820 };
-  const TURQ = "#00C8B4";
+  const mid1 = { x: cx - 140, y: 740 };
+  const mid2 = { x: cx + 140, y: 740 };
+  const bot1 = { x: cx - 140, y: 840 };
+  const bot2 = { x: cx + 140, y: 840 };
+
+  // mid points for dots
+  const dotTopMid1 = { x: (top.x + mid1.x) / 2, y: (top.y + 28 + mid1.y - 28) / 2 };
+  const dotTopMid2 = { x: (top.x + mid2.x) / 2, y: (top.y + 28 + mid2.y - 28) / 2 };
+  const dotMidH = { x: cx, y: 740 }; // between mid1 and mid2
+  const dotMid1Bot1 = { x: mid1.x, y: (mid1.y + 28 + bot1.y - 28) / 2 };
+  const dotMid2Bot2 = { x: mid2.x, y: (mid2.y + 28 + bot2.y - 28) / 2 };
+  const dotBotH = { x: cx, y: 840 };
 
   return (
     <AbsoluteFill style={{
@@ -117,27 +129,48 @@ export const LinkedInAd = () => {
         Bygd for konsern. Ikke tilpasset.
       </div>
 
-      {/* Org chart connection lines */}
+      {/* Org chart connection lines + dots */}
       <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
-        <DashLine x1={top.x} y1={top.y + 28} x2={mid1.x} y2={mid1.y - 28} delay={70} />
-        <DashLine x1={top.x} y1={top.y + 28} x2={mid2.x} y2={mid2.y - 28} delay={75} />
-        <DashLine x1={mid1.x + 110} y1={mid1.y} x2={mid2.x - 110} y2={mid2.y} delay={95} />
-        <DashLine x1={mid1.x} y1={mid1.y + 28} x2={bot1.x} y2={bot1.y - 28} delay={105} />
-        <DashLine x1={mid2.x} y1={mid2.y + 28} x2={bot2.x} y2={bot2.y - 28} delay={108} />
-        <DashLine x1={bot1.x + 110} y1={bot1.y} x2={bot2.x - 110} y2={bot2.y} delay={120} />
+        <DashLine x1={top.x} y1={top.y + 28} x2={mid1.x} y2={mid1.y - 28} />
+        <DashLine x1={top.x} y1={top.y + 28} x2={mid2.x} y2={mid2.y - 28} />
+        <DashLine x1={mid1.x + 110} y1={mid1.y} x2={mid2.x - 110} y2={mid2.y} />
+        <DashLine x1={mid1.x} y1={mid1.y + 28} x2={bot1.x} y2={bot1.y - 28} />
+        <DashLine x1={mid2.x} y1={mid2.y + 28} x2={bot2.x} y2={bot2.y - 28} />
+        <DashLine x1={bot1.x + 110} y1={bot1.y} x2={bot2.x - 110} y2={bot2.y} />
 
-        <FlowDot x1={top.x} y1={top.y + 28} x2={mid1.x} y2={mid1.y - 28} delay={140} color={TURQ} />
-        <FlowDot x1={top.x} y1={top.y + 28} x2={mid2.x} y2={mid2.y - 28} delay={155} color={TURQ} />
-        <FlowDot x1={mid1.x} y1={mid1.y + 28} x2={bot1.x} y2={bot1.y - 28} delay={170} color={TURQ} />
-        <FlowDot x1={mid2.x} y1={mid2.y + 28} x2={bot2.x} y2={bot2.y - 28} delay={185} color={TURQ} />
+        {/* Konsolideres = green (parent → child vertical/diagonal) */}
+        <Dot x={dotTopMid1.x} y={dotTopMid1.y} color={C.green} />
+        <Dot x={dotTopMid2.x} y={dotTopMid2.y} color={C.green} />
+        <Dot x={dotMid1Bot1.x} y={dotMid1Bot1.y} color={C.green} />
+        <Dot x={dotMid2Bot2.x} y={dotMid2Bot2.y} color={C.green} />
+
+        {/* Intercompany = turquoise (sibling horizontal) */}
+        <Dot x={dotMidH.x} y={dotMidH.y} color={C.turq} glow />
+        <Dot x={dotBotH.x} y={dotBotH.y} color={C.turq} glow />
       </svg>
 
       {/* Org chart boxes */}
-      <Box cx={top.x} cy={top.y} label="Holdingselskap AS" delay={60} fill={C.card} textColor="#fff" />
-      <Box cx={mid1.x} cy={mid1.y} label="Driftsselskap AS" delay={80} fill="#7742A8" textColor="#fff" />
-      <Box cx={mid2.x} cy={mid2.y} label="Dotterbolag AB" delay={86} fill="#7742A8" textColor="#fff" />
-      <Box cx={bot1.x} cy={bot1.y} label="Eiendom AS" delay={100} fill={C.cardLighter} textColor="#2A0A33" />
-      <Box cx={bot2.x} cy={bot2.y} label="Handel AB" delay={106} fill={C.cardLighter} textColor="#2A0A33" />
+      <Box cx={top.x} cy={top.y} label="Holdingselskap AS" fill={C.card} textColor="#fff" />
+      <Box cx={mid1.x} cy={mid1.y} label="Driftsselskap AS" fill="#7742A8" textColor="#fff" />
+      <Box cx={mid2.x} cy={mid2.y} label="Dotterbolag AB" fill="#7742A8" textColor="#fff" />
+      <Box cx={bot1.x} cy={bot1.y} label="Eiendom AS" fill={C.cardLighter} textColor="#2A0A33" />
+      <Box cx={bot2.x} cy={bot2.y} label="Handel AB" fill={C.cardLighter} textColor="#2A0A33" />
+
+      {/* Legend */}
+      <div style={{
+        position: "absolute", left: 0, right: 0, top: 905, textAlign: "center",
+        opacity: legendOp, fontSize: 15, color: "#fff", fontWeight: 500,
+        display: "flex", justifyContent: "center", gap: 32,
+      }}>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+          <span style={{ width: 10, height: 10, borderRadius: 5, background: C.green, display: "inline-block" }} />
+          Konsolideres
+        </span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+          <span style={{ width: 10, height: 10, borderRadius: 5, background: C.turq, display: "inline-block" }} />
+          Intercompany
+        </span>
+      </div>
 
       {/* Footer */}
       <div style={{
