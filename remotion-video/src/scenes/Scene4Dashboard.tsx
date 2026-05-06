@@ -16,7 +16,7 @@ const KPI = ({ label, value, delta, delay }: { label: string; value: string; del
   );
 };
 
-const Chart = ({ delay, color }: { delay: number; color: string }) => {
+const Chart = ({ delay, color, title }: { delay: number; color: string; title: string }) => {
   const frame = useCurrentFrame();
   const t = interpolate(frame, [delay, delay + 40], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const pts = [0.2, 0.35, 0.3, 0.5, 0.45, 0.6, 0.55, 0.7, 0.75, 0.85, 0.9, 1.0];
@@ -29,7 +29,7 @@ const Chart = ({ delay, color }: { delay: number; color: string }) => {
   const dash = 1400;
   return (
     <div style={{ background: "#0f1a36", border: "1px solid #1f2c52", borderRadius: 14, padding: 20, flex: 1 }}>
-      <div style={{ fontSize: 16, color: "#cbd5e1", marginBottom: 8, fontWeight: 600 }}>Omsetning – siste 12 mnd</div>
+      <div style={{ fontSize: 16, color: "#cbd5e1", marginBottom: 8, fontWeight: 600 }}>{title}</div>
       <svg width={w} height={h}>
         <path d={`${path} L${w},${h} L0,${h} Z`} fill={color} opacity={0.15 * t} />
         <path d={path} fill="none" stroke={color} strokeWidth={3}
@@ -68,8 +68,8 @@ export const Scene4Dashboard = () => {
       </div>
 
       <div style={{ display: "flex", gap: 18, marginTop: 24 }}>
-        <Chart delay={45} color="#2dd4bf" />
-        <Chart delay={55} color="#60a5fa" />
+        <Chart delay={45} color="#2dd4bf" title="Omsetning – siste 12 mnd" />
+        <Chart delay={55} color="#60a5fa" title="EBITDA – siste 12 mnd" />
       </div>
 
       <div style={{ marginTop: 28, fontSize: 22, color: "#cbd5e1", opacity: interpolate(frame,[80,100],[0,1],{extrapolateRight:"clamp"}) }}>
