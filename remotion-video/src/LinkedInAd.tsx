@@ -69,11 +69,12 @@ export const LinkedInAd = () => {
 
   // Org chart positions (canvas 1080x1080)
   const cx = 540;
-  const top = { x: cx, y: 700 };
-  const mid1 = { x: cx - 130, y: 810 };
-  const mid2 = { x: cx + 130, y: 810 };
-  const bot1 = { x: cx - 130, y: 900 };
-  const bot2 = { x: cx + 130, y: 900 };
+  const top = { x: cx, y: 620 };
+  const mid1 = { x: cx - 130, y: 730 };
+  const mid2 = { x: cx + 130, y: 730 };
+  const bot1 = { x: cx - 130, y: 820 };
+  const bot2 = { x: cx + 130, y: 820 };
+  const TURQ = "#00C8B4";
 
   return (
     <AbsoluteFill style={{
@@ -125,10 +126,10 @@ export const LinkedInAd = () => {
         <DashLine x1={mid2.x} y1={mid2.y + 28} x2={bot2.x} y2={bot2.y - 28} delay={108} />
         <DashLine x1={bot1.x + 110} y1={bot1.y} x2={bot2.x - 110} y2={bot2.y} delay={120} />
 
-        <FlowDot x1={top.x} y1={top.y + 28} x2={mid1.x} y2={mid1.y - 28} delay={140} color={C.yellow} />
-        <FlowDot x1={top.x} y1={top.y + 28} x2={mid2.x} y2={mid2.y - 28} delay={155} color={C.yellow} />
-        <FlowDot x1={mid1.x} y1={mid1.y + 28} x2={bot1.x} y2={bot1.y - 28} delay={170} color={C.cardLighter} />
-        <FlowDot x1={mid2.x} y1={mid2.y + 28} x2={bot2.x} y2={bot2.y - 28} delay={185} color={C.cardLighter} />
+        <FlowDot x1={top.x} y1={top.y + 28} x2={mid1.x} y2={mid1.y - 28} delay={140} color={TURQ} />
+        <FlowDot x1={top.x} y1={top.y + 28} x2={mid2.x} y2={mid2.y - 28} delay={155} color={TURQ} />
+        <FlowDot x1={mid1.x} y1={mid1.y + 28} x2={bot1.x} y2={bot1.y - 28} delay={170} color={TURQ} />
+        <FlowDot x1={mid2.x} y1={mid2.y + 28} x2={bot2.x} y2={bot2.y - 28} delay={185} color={TURQ} />
       </svg>
 
       {/* Org chart boxes */}
