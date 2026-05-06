@@ -42,21 +42,28 @@ const Box = ({
 
 const DashLine = ({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: number; y2: number }) => {
   const frame = useCurrentFrame();
-  const t = interpolate(frame, [ORG_DELAY, ORG_DELAY + 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const len = Math.hypot(x2 - x1, y2 - y1);
+  const op = interpolate(frame, [ORG_DELAY, ORG_DELAY + 14], [0, 0.85], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={C.line} strokeWidth={2}
-      strokeDasharray="5 6" strokeDashoffset={len - len * t} opacity={0.85} />
+      strokeDasharray="5 6" opacity={op} />
   );
 };
 
-const Dot = ({ x, y, color, glow = false }: { x: number; y: number; color: string; glow?: boolean }) => {
+// Dot that flows back and forth along a line segment
+const FlowingDot = ({
+  x1, y1, x2, y2, color, phase = 0, glow = false,
+}: { x1: number; y1: number; x2: number; y2: number; color: string; phase?: number; glow?: boolean }) => {
   const frame = useCurrentFrame();
-  const op = interpolate(frame, [ORG_DELAY + 12, ORG_DELAY + 28], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const pulse = 0.7 + 0.3 * Math.sin((frame - ORG_DELAY) * 0.15);
+  const op = interpolate(frame, [ORG_DELAY + 10, ORG_DELAY + 26], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  // ping-pong 0..1..0 over 90 frames
+  const period = 90;
+  const t = (frame + phase) % period;
+  const p = t < period / 2 ? t / (period / 2) : 1 - (t - period / 2) / (period / 2);
+  const x = x1 + (x2 - x1) * p;
+  const y = y1 + (y2 - y1) * p;
   return (
     <>
-      {glow && <circle cx={x} cy={y} r={9} fill={color} opacity={op * 0.25 * pulse} />}
+      {glow && <circle cx={x} cy={y} r={10} fill={color} opacity={op * 0.3} />}
       <circle cx={x} cy={y} r={5} fill={color} opacity={op} />
     </>
   );
