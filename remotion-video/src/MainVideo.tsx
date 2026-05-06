@@ -11,11 +11,11 @@ const { fontFamily } = loadFont("normal", { weights: ["400", "600", "700", "800"
 export const MainVideo = () => (
   <AbsoluteFill style={{ fontFamily, backgroundColor: "#0a1020", color: "white" }}>
     <Series>
-      <Series.Sequence durationInFrames={75}><Scene1Excel /></Series.Sequence>
-      <Series.Sequence durationInFrames={75}><Scene2Limit /></Series.Sequence>
-      <Series.Sequence durationInFrames={45}><Scene3Transition /></Series.Sequence>
-      <Series.Sequence durationInFrames={120}><Scene4Dashboard /></Series.Sequence>
-      <Series.Sequence durationInFrames={75}><Scene5Logo /></Series.Sequence>
+      <Series.Sequence durationInFrames={95}><Scene1Excel /></Series.Sequence>
+      <Series.Sequence durationInFrames={95}><Scene2Limit /></Series.Sequence>
+      <Series.Sequence durationInFrames={60}><Scene3Transition /></Series.Sequence>
+      <Series.Sequence durationInFrames={140}><Scene4Dashboard /></Series.Sequence>
+      <Series.Sequence durationInFrames={90}><Scene5Logo /></Series.Sequence>
     </Series>
   </AbsoluteFill>
 );
