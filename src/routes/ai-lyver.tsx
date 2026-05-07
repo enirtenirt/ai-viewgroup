@@ -642,7 +642,7 @@ function AiLyverPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
         html { scroll-behavior: smooth; }
         @media (max-width: 768px) {
           .snap-y > section { scroll-snap-align: start; }
