@@ -15,7 +15,7 @@ export const Route = createFileRoute("/ai-lyver")({
   component: AiLyverPage,
 });
 
-const serif = { fontFamily: "'Playfair Display', Georgia, 'Times New Roman', serif" };
+const serif = { fontFamily: "'Inter', system-ui, -apple-system, sans-serif" };
 const mono = { fontFamily: "'JetBrains Mono', 'Fira Code', ui-monospace, Menlo, monospace" };
 
 function useQueryParam(key: string) {
