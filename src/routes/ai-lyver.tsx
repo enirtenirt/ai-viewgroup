@@ -589,9 +589,11 @@ function CTA() {
       style={{ background: "radial-gradient(ellipse at top, #7742A8 0%, #50145A 45%, #190523 100%)" }}
     >
       <div className="max-w-3xl">
-        <div style={mono} className="text-[11px] uppercase tracking-[0.4em]">
-          <span style={{ color: "#FFC832" }}>VIEW Group</span>
-          <span style={{ color: "#CC99FF" }}> · Xledger Platinum Partner 2026</span>
+        <div className="flex items-center justify-center gap-3">
+          <img src={viewLogo} alt="VIEW Group" className="h-10 w-auto" style={{ filter: "brightness(0) invert(1)" }} />
+          <span style={mono} className="text-[11px] uppercase tracking-[0.4em]" >
+            <span style={{ color: "#CC99FF" }}>Xledger Platinum Partner 2026</span>
+          </span>
         </div>
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -599,10 +601,10 @@ function CTA() {
           viewport={{ once: true }}
           transition={{ duration: 1.2 }}
           style={serif}
-          className="mt-6 text-4xl leading-tight md:text-6xl"
+          className="mt-8 text-4xl font-semibold leading-tight tracking-tight md:text-6xl"
         >
           VIEW Group gir deg<br />
-          <span className="italic" style={{ color: "#CC99FF" }}>én sannhet for hele konsernet.</span>
+          <span className="italic font-normal" style={{ color: "#CC99FF" }}>én sannhet for hele konsernet.</span>
         </motion.h2>
 
         <motion.p
@@ -611,9 +613,9 @@ function CTA() {
           viewport={{ once: true }}
           transition={{ delay: 0.3, duration: 1 }}
           className="mx-auto mt-8 max-w-xl text-lg"
-          style={{ color: "#DCBEFA" }}
+          style={{ ...serif, color: "#DCBEFA" }}
         >
-          20 minutter. Vi viser deg hvordan AI-en slutter å lyve.
+          Opplev løsningen selv. Book en 20 min uforpliktende demo.
         </motion.p>
 
         <motion.a
@@ -621,18 +623,13 @@ function CTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5, duration: 0.9 }}
-          href="mailto:rune@xledger.no?subject=Book%2020%20min%20demo%20-%20VIEW%20Group"
+          href="mailto:post@viewgroup.no?subject=Book%2020%20min%20demo%20-%20VIEW%20Group"
           className="mt-12 inline-flex items-center gap-3 rounded-full px-10 py-5 transition hover:opacity-90"
-          style={{ ...serif, background: "#FFC832", color: "#190523" }}
+          style={{ ...serif, background: "#FFC832", color: "#190523", fontWeight: 600 }}
         >
-          <span className="text-lg font-semibold">Book 20 min demo</span>
+          <span className="text-lg">Book 20 min demo</span>
           <span>→</span>
         </motion.a>
-
-        <div style={mono} className="mt-10 space-y-1 text-xs">
-          <div style={{ color: "#CC99FF" }}>Rune Hansen · VIEW Group</div>
-          <div style={{ color: "#B978F5" }}>+47 900 00 000 · rune@xledger.no</div>
-        </div>
       </div>
     </section>
   );
