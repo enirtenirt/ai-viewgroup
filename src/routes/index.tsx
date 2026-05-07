@@ -1,14 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import adImage from "@/assets/view-group-ad.png";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
-  component: Index,
+  beforeLoad: () => {
+    throw redirect({ to: "/ai-lyver" });
+  },
 });
-
-function Index() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-black p-4">
-      <img src={adImage} alt="VIEW Group – En sannhet for hele konsernet" className="max-h-screen w-auto" />
-    </div>
-  );
-}
