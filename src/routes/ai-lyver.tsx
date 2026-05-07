@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
+import viewLogo from "@/assets/view-logo.png";
 
 export const Route = createFileRoute("/ai-lyver")({
   head: () => ({
