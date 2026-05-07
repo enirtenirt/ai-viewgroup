@@ -543,7 +543,7 @@ const BULLETS = [
 
 function Solution() {
   return (
-    <section className="bg-neutral-950 px-6 py-32 text-white">
+    <section className="px-6 py-32 text-white" style={{ background: "linear-gradient(180deg, #190523 0%, #50145A 100%)" }}>
       <div className="mx-auto max-w-5xl">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -555,7 +555,7 @@ function Solution() {
         >
           Xledger for konsern.
           <br />
-          <span className="italic text-white/60">Den felles datamodellen som må ligge under.</span>
+          <span className="italic" style={{ color: "#CC99FF" }}>Den felles datamodellen som må ligge under.</span>
         </motion.h2>
 
         <div className="mt-16 grid gap-8 md:grid-cols-2">
@@ -566,11 +566,12 @@ function Solution() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.18, duration: 0.9 }}
-              className="border-t border-white/15 pt-6"
+              className="border-t pt-6"
+              style={{ borderColor: "#B978F5" }}
             >
-              <div style={serif} className="text-3xl text-white/80">{b.i}</div>
+              <div style={{ ...serif, color: "#DCBEFA" }} className="text-3xl">{b.i}</div>
               <div style={serif} className="mt-3 text-2xl">{b.t}</div>
-              <p className="mt-2 text-white/60">{b.d}</p>
+              <p className="mt-2" style={{ color: "#DCBEFA" }}>{b.d}</p>
             </motion.div>
           ))}
         </div>
@@ -582,36 +583,54 @@ function Solution() {
 /* ─────────────────────── SECTION 8 — CTA ─────────────────────── */
 function CTA() {
   return (
-    <section className="relative flex min-h-screen items-center justify-center bg-neutral-950 px-6 text-center text-white">
+    <section
+      className="relative flex min-h-screen items-center justify-center px-6 text-center text-white"
+      style={{ background: "radial-gradient(ellipse at top, #7742A8 0%, #50145A 45%, #190523 100%)" }}
+    >
       <div className="max-w-3xl">
+        <div style={mono} className="text-[11px] uppercase tracking-[0.4em]">
+          <span style={{ color: "#FFC832" }}>VIEW Group</span>
+          <span style={{ color: "#CC99FF" }}> · Xledger Platinum Partner 2026</span>
+        </div>
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1.2 }}
           style={serif}
-          className="text-4xl leading-tight md:text-6xl"
+          className="mt-6 text-4xl leading-tight md:text-6xl"
         >
-          20 minutter.<br />
-          <span className="italic text-white/70">Vi viser deg hvordan AI-en slutter å lyve.</span>
+          VIEW Group gir deg<br />
+          <span className="italic" style={{ color: "#CC99FF" }}>én sannhet for hele konsernet.</span>
         </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3, duration: 1 }}
+          className="mx-auto mt-8 max-w-xl text-lg"
+          style={{ color: "#DCBEFA" }}
+        >
+          20 minutter. Vi viser deg hvordan AI-en slutter å lyve.
+        </motion.p>
 
         <motion.a
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.4, duration: 0.9 }}
-          href="mailto:rune@xledger.no?subject=Demo%20Xledger%20for%20konsern"
-          className="mt-12 inline-flex items-center gap-3 rounded-full bg-white px-10 py-5 text-neutral-950 transition hover:bg-white/90"
-          style={serif}
+          transition={{ delay: 0.5, duration: 0.9 }}
+          href="mailto:rune@xledger.no?subject=Book%2020%20min%20demo%20-%20VIEW%20Group"
+          className="mt-12 inline-flex items-center gap-3 rounded-full px-10 py-5 transition hover:opacity-90"
+          style={{ ...serif, background: "#FFC832", color: "#190523" }}
         >
-          <span className="text-lg">Book demo med Rune</span>
+          <span className="text-lg font-semibold">Book 20 min demo</span>
           <span>→</span>
         </motion.a>
 
-        <div style={mono} className="mt-10 space-y-1 text-xs text-white/50">
-          <div>Rune Hansen · Xledger</div>
-          <div>+47 900 00 000 · rune@xledger.no</div>
+        <div style={mono} className="mt-10 space-y-1 text-xs">
+          <div style={{ color: "#CC99FF" }}>Rune Hansen · VIEW Group</div>
+          <div style={{ color: "#B978F5" }}>+47 900 00 000 · rune@xledger.no</div>
         </div>
       </div>
     </section>
