@@ -651,7 +651,7 @@ function AiLyverPage() {
           main.snap { scroll-snap-type: y mandatory; }
         }
       `}</style>
-      <main className="snap-y relative bg-[#0A1628] text-white antialiased">
+      <main className="snap-y relative bg-[#190523] text-white antialiased">
         <GrainOverlay />
         <Hero selskap={selskap} />
         <GenerationAndWobble />
