@@ -323,7 +323,7 @@ function GenerationAndWobble() {
 function Reveal() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const bg = useTransform(scrollYProgress, [0, 0.4, 0.6, 1], ["#0A1628", "#3A0E0E", "#7A1B1B", "#7A1B1B"]);
+  const bg = useTransform(scrollYProgress, [0, 0.4, 0.6, 1], ["#190523", "#3A0E0E", "#7A1B1B", "#7A1B1B"]);
   return (
     <motion.section
       ref={ref}
