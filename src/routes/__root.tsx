@@ -29,14 +29,18 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "VIEW Group - for konsern" },
+      { name: "description", content: "AI`en din lyver til styret. Men den vet det ikke selv." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "VIEW Group - for konsern" },
+      { property: "og:description", content: "AI`en din lyver til styret. Men den vet det ikke selv." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "VIEW Group - for konsern" },
+      { name: "twitter:description", content: "AI`en din lyver til styret. Men den vet det ikke selv." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/WMe5xQVj3kRDzdJJg4FN9lFiegJ2/social-images/social-1778158180767-VIEW_Group_-_økonomistrying_og_regnskap_.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/WMe5xQVj3kRDzdJJg4FN9lFiegJ2/social-images/social-1778158180767-VIEW_Group_-_økonomistrying_og_regnskap_.webp" },
     ],
     links: [
       {
