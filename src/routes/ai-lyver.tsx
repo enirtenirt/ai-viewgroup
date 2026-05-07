@@ -42,7 +42,7 @@ function GrainOverlay() {
 
 /* ───────────────────────────── HERO ───────────────────────────── */
 function Hero({ selskap }: { selskap: string | null }) {
-  const lead = selskap ? `AI-en hos ${selskap} lyver til styret.` : "AI-en din lyver til styret.";
+  const lead = selskap ? `AI-en hos ${selskap} kan lyve til styret.` : "AI-en din kan lyve til styret.";
   const words = lead.split(" ");
   return (
     <section className="relative flex min-h-screen items-center justify-center px-6 text-center">
