@@ -402,17 +402,17 @@ const Scene4Explanation: React.FC = () => {
         justifyContent: "flex-start",
       }}
     >
-      <div style={{ fontSize: 13, letterSpacing: 4, fontWeight: 600, color: C.primary, opacity: titleOp }}>
+      <div style={{ fontSize: 18, letterSpacing: 5, fontWeight: 700, color: C.primary, opacity: titleOp }}>
         HVA SKJER NÅR AI MØTER DÅRLIG DATA?
       </div>
       <h2
         style={{
-          fontSize: 64,
-          lineHeight: 1.05,
+          fontSize: 88,
+          lineHeight: 1.02,
           fontWeight: 700,
-          letterSpacing: -1.5,
-          margin: "14px 0 0 0",
-          maxWidth: 900,
+          letterSpacing: -2,
+          margin: "20px 0 0 0",
+          maxWidth: 980,
           opacity: titleOp,
         }}
       >
@@ -421,7 +421,7 @@ const Scene4Explanation: React.FC = () => {
       </h2>
 
       {/* Three problem cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24, marginTop: 50 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28, marginTop: 70 }}>
         {[
           { num: "01", title: "Definisjoner", body: "Fem ERP. Fem ulike definisjoner av «omsetning»." },
           { num: "02", title: "Valuta", body: "Konvertert på fem ulike tidspunkt. Alle «korrekte»." },
@@ -437,18 +437,18 @@ const Scene4Explanation: React.FC = () => {
                 opacity: op,
                 transform: `translateY(${y}px)`,
                 border: `1px solid ${C.lightest}`,
-                borderRadius: 14,
-                padding: 26,
+                borderRadius: 16,
+                padding: 32,
                 background: "#fafafa",
               }}
             >
-              <div style={{ fontSize: 11, letterSpacing: 3, color: C.medium, fontWeight: 700 }}>
+              <div style={{ fontSize: 15, letterSpacing: 3, color: C.medium, fontWeight: 700 }}>
                 {card.num}
               </div>
-              <div style={{ fontSize: 28, fontWeight: 700, marginTop: 8, color: C.dark }}>
+              <div style={{ fontSize: 38, fontWeight: 700, marginTop: 12, color: C.dark }}>
                 {card.title}
               </div>
-              <div style={{ fontSize: 16, marginTop: 10, color: "#555", lineHeight: 1.45 }}>
+              <div style={{ fontSize: 22, marginTop: 14, color: "#555", lineHeight: 1.45 }}>
                 {card.body}
               </div>
             </div>
