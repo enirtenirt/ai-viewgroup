@@ -426,18 +426,18 @@ const Scene4CTA: React.FC = () => {
 
       <h2
         style={{
-          fontSize: 84,
+          fontSize: 78,
           lineHeight: 1.05,
           fontWeight: 700,
           letterSpacing: -1.5,
           margin: 0,
           opacity: titleOp,
-          maxWidth: 900,
+          maxWidth: 940,
         }}
       >
-        En sannhet
+        Opplev ERP-systemet
         <br />
-        <span style={{ color: C.pop }}>for hele konsernet.</span>
+        <span style={{ color: C.pop }}>bygget for konsern.</span>
       </h2>
 
       <div
@@ -449,7 +449,7 @@ const Scene4CTA: React.FC = () => {
           maxWidth: 760,
         }}
       >
-        Vi viser deg hvordan AI-en slutter å lyve.
+        Book en 20 min uforpliktende demo.
       </div>
 
       <div
