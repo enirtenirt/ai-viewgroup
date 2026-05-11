@@ -346,7 +346,7 @@ const Scene3Reveal: React.FC = () => {
     >
       <h2
         style={{
-          fontSize: 140,
+          fontSize: 150,
           lineHeight: 0.95,
           fontWeight: 700,
           letterSpacing: -3,
@@ -355,21 +355,25 @@ const Scene3Reveal: React.FC = () => {
           transform: `scale(${0.92 + titleSp * 0.08})`,
         }}
       >
-        Alle tallene
+        Tallene
         <br />
-        <span style={{ color: C.pop, fontStyle: "italic" }}>var feil.</span>
+        <span style={{ color: C.pop, fontStyle: "italic" }}>skurrer.</span>
       </h2>
 
       <div
         style={{
           marginTop: 40,
-          fontSize: 32,
+          fontSize: 28,
           color: C.lighter,
           fontStyle: "italic",
           opacity: subOp,
+          maxWidth: 880,
+          lineHeight: 1.35,
         }}
       >
-        AI-en visste det ikke. Styret heller ikke.
+        Magefølelsen sier at dette må sjekkes.
+        <br />
+        AI'en har gjort det den får beskjed om.
       </div>
     </AbsoluteFill>
   );
@@ -422,18 +426,18 @@ const Scene4CTA: React.FC = () => {
 
       <h2
         style={{
-          fontSize: 84,
+          fontSize: 78,
           lineHeight: 1.05,
           fontWeight: 700,
           letterSpacing: -1.5,
           margin: 0,
           opacity: titleOp,
-          maxWidth: 900,
+          maxWidth: 940,
         }}
       >
-        En sannhet
+        Opplev ERP-systemet
         <br />
-        <span style={{ color: C.pop }}>for hele konsernet.</span>
+        <span style={{ color: C.pop }}>bygget for konsern.</span>
       </h2>
 
       <div
@@ -445,7 +449,7 @@ const Scene4CTA: React.FC = () => {
           maxWidth: 760,
         }}
       >
-        Vi viser deg hvordan AI-en slutter å lyve.
+        Book en 20 min uforpliktende demo.
       </div>
 
       <div
