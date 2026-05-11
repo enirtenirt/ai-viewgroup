@@ -372,8 +372,6 @@ const Scene3Reveal: React.FC = () => {
         }}
       >
         Magefølelsen sier at dette må sjekkes.
-        <br />
-        AI'en har gjort det den får beskjed om.
       </div>
     </AbsoluteFill>
   );
@@ -467,7 +465,7 @@ const Scene4CTA: React.FC = () => {
           boxShadow: `0 20px 50px ${C.pop}55`,
         }}
       >
-        Book en 20 min uforpliktende demo →
+        Book 20 min demo av Xledger →
       </div>
 
       <div
