@@ -350,7 +350,7 @@ function Reveal() {
           style={serif}
           className="mx-auto mt-10 max-w-3xl text-2xl italic text-white/80 md:text-3xl"
         >
-          Magefølelsen sier at dette må sjekkes. AI'en har gjort det den får beskjed om.
+          Magefølelsen sier at dette må sjekkes.
         </motion.p>
       </div>
     </motion.section>
@@ -486,7 +486,7 @@ function Explanation() {
           style={serif}
           className="text-4xl leading-tight md:text-6xl"
         >
-          Hvorfor det skjer.
+          Hva skjer når AI møter dårlige datagrunnlag?
         </motion.h2>
         <p className="mt-6 max-w-2xl text-lg text-neutral-600">
           Tre strukturelle problemer i dataene som ingen AI-modell kan tenke seg ut av.
@@ -629,7 +629,7 @@ function CTA() {
           className="mt-12 inline-flex items-center gap-3 rounded-full px-10 py-5 transition hover:opacity-90"
           style={{ ...serif, background: "#FFC832", color: "#190523", fontWeight: 600 }}
         >
-          <span className="text-lg">Book 20 min demo</span>
+          <span className="text-lg">Book 20 min demo av Xledger</span>
           <span>→</span>
         </motion.a>
       </div>
