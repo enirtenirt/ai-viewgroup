@@ -340,7 +340,7 @@ function Reveal() {
           style={serif}
           className="text-6xl leading-none md:text-8xl lg:text-9xl"
         >
-          Alle tallene<br />var feil.
+          Tallene<br />skurrer.
         </motion.h2>
         <motion.p
           initial={{ opacity: 0 }}
@@ -348,9 +348,9 @@ function Reveal() {
           viewport={{ once: true, amount: 0.6 }}
           transition={{ delay: 0.8, duration: 1.4 }}
           style={serif}
-          className="mt-10 text-2xl italic text-white/80 md:text-3xl"
+          className="mx-auto mt-10 max-w-3xl text-2xl italic text-white/80 md:text-3xl"
         >
-          AI-en visste det ikke. Styret heller ikke.
+          Magefølelsen sier at dette må sjekkes. AI'en har gjort det den får beskjed om.
         </motion.p>
       </div>
     </motion.section>
