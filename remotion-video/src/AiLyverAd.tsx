@@ -377,7 +377,206 @@ const Scene3Reveal: React.FC = () => {
   );
 };
 
-/* ────────────────────────────── SCENE 4 — VIEW GROUP CTA ────────────────────────────── */
+/* ────────────────────────────── SCENE 4 — EXPLANATION ────────────────────────────── */
+const ERPS = [
+  { name: "SAP", def: "Fakturert, ekskl. mva" },
+  { name: "Visma", def: "Bokført inntekt" },
+  { name: "Oracle", def: "Levert volum × pris" },
+  { name: "Dynamics", def: "Inntektsført pr. kontrakt" },
+  { name: "Custom", def: "Sum salgsordre" },
+];
+
+const Scene4Explanation: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const titleOp = interpolate(frame, [0, 18], [0, 1], { extrapolateRight: "clamp" });
+
+  return (
+    <AbsoluteFill
+      style={{
+        background: "#fff",
+        fontFamily: FONT,
+        color: C.dark,
+        padding: 70,
+        justifyContent: "flex-start",
+      }}
+    >
+      <div style={{ fontSize: 13, letterSpacing: 4, fontWeight: 600, color: C.primary, opacity: titleOp }}>
+        HVA SKJER NÅR AI MØTER DÅRLIG DATA?
+      </div>
+      <h2
+        style={{
+          fontSize: 64,
+          lineHeight: 1.05,
+          fontWeight: 700,
+          letterSpacing: -1.5,
+          margin: "14px 0 0 0",
+          maxWidth: 900,
+          opacity: titleOp,
+        }}
+      >
+        Tre strukturelle problemer<br />
+        <span style={{ color: C.primary, fontStyle: "italic" }}>ingen AI kan tenke seg ut av.</span>
+      </h2>
+
+      {/* Three problem cards */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24, marginTop: 50 }}>
+        {[
+          { num: "01", title: "Definisjoner", body: "Fem ERP. Fem ulike definisjoner av «omsetning»." },
+          { num: "02", title: "Valuta", body: "Konvertert på fem ulike tidspunkt. Alle «korrekte»." },
+          { num: "03", title: "Intercompany", body: "Manuell eliminering. Med hull. AI-en ser det ikke." },
+        ].map((card, i) => {
+          const delay = 25 + i * 12;
+          const op = interpolate(frame, [delay, delay + 18], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+          const y = interpolate(frame, [delay, delay + 22], [20, 0], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+          return (
+            <div
+              key={i}
+              style={{
+                opacity: op,
+                transform: `translateY(${y}px)`,
+                border: `1px solid ${C.lightest}`,
+                borderRadius: 14,
+                padding: 26,
+                background: "#fafafa",
+              }}
+            >
+              <div style={{ fontSize: 11, letterSpacing: 3, color: C.medium, fontWeight: 700 }}>
+                {card.num}
+              </div>
+              <div style={{ fontSize: 28, fontWeight: 700, marginTop: 8, color: C.dark }}>
+                {card.title}
+              </div>
+              <div style={{ fontSize: 16, marginTop: 10, color: "#555", lineHeight: 1.45 }}>
+                {card.body}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+/* ────────────────────────────── SCENE 5 — BRIDGE ────────────────────────────── */
+const Scene5Bridge: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const titleSp = spring({ frame: frame - 5, fps, config: { damping: 22, stiffness: 90 } });
+  const subOp = interpolate(frame, [40, 65], [0, 1], { extrapolateRight: "clamp" });
+
+  return (
+    <AbsoluteFill
+      style={{
+        background: "#fff",
+        fontFamily: FONT,
+        color: C.dark,
+        padding: 80,
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+      }}
+    >
+      <h2
+        style={{
+          fontSize: 96,
+          lineHeight: 1.0,
+          fontWeight: 700,
+          letterSpacing: -2,
+          margin: 0,
+          opacity: titleSp,
+          maxWidth: 1000,
+        }}
+      >
+        Feilen ligger i grunnlaget.
+        <br />
+        <span style={{ fontStyle: "italic", color: "#888" }}>Ikke i tallene.</span>
+      </h2>
+      <div
+        style={{
+          marginTop: 36,
+          fontSize: 24,
+          color: "#555",
+          opacity: subOp,
+          maxWidth: 760,
+          lineHeight: 1.45,
+        }}
+      >
+        AI-ready starter ett lag lenger ned — i datamodellen.
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+/* ────────────────────────────── SCENE 6 — SOLUTION ────────────────────────────── */
+const BULLETS = [
+  { i: "◷", t: "Ett system. Hele konsernet.", d: "Alle selskaper, alle land, samme database." },
+  { i: "≡", t: "Én kontoplan med arvestruktur.", d: "Lokal fleksibilitet, konsernkonsistens." },
+  { i: "⇆", t: "Automatisk intercompany-eliminering.", d: "Ingen manuelle ark. Ingen hull." },
+  { i: "¤", t: "Flervaluta i samme prosess.", d: "Konsistent omregning, sporbart." },
+];
+
+const Scene6Solution: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const titleOp = interpolate(frame, [0, 20], [0, 1], { extrapolateRight: "clamp" });
+
+  return (
+    <AbsoluteFill
+      style={{
+        background: `linear-gradient(180deg, ${C.dark} 0%, ${C.primary} 100%)`,
+        fontFamily: FONT,
+        color: "#fff",
+        padding: 70,
+        justifyContent: "center",
+      }}
+    >
+      <h2
+        style={{
+          fontSize: 60,
+          lineHeight: 1.05,
+          fontWeight: 700,
+          letterSpacing: -1.2,
+          margin: 0,
+          opacity: titleOp,
+          maxWidth: 900,
+        }}
+      >
+        Xledger for konsern.
+        <br />
+        <span style={{ color: C.light, fontStyle: "italic" }}>Datamodellen som må ligge under.</span>
+      </h2>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 28, marginTop: 50 }}>
+        {BULLETS.map((b, i) => {
+          const delay = 25 + i * 10;
+          const op = interpolate(frame, [delay, delay + 18], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+          const y = interpolate(frame, [delay, delay + 22], [16, 0], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+          return (
+            <div
+              key={i}
+              style={{
+                opacity: op,
+                transform: `translateY(${y}px)`,
+                borderTop: `1px solid ${C.pop}`,
+                paddingTop: 16,
+              }}
+            >
+              <div style={{ fontSize: 28, color: C.lighter }}>{b.i}</div>
+              <div style={{ fontSize: 24, fontWeight: 700, marginTop: 8 }}>{b.t}</div>
+              <div style={{ fontSize: 16, marginTop: 6, color: C.lighter, lineHeight: 1.4 }}>
+                {b.d}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+/* ────────────────────────────── SCENE 7 — VIEW GROUP CTA ────────────────────────────── */
 const Scene4CTA: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -505,6 +704,27 @@ export const AiLyverAd: React.FC = () => {
         />
         <TransitionSeries.Sequence durationInFrames={150}>
           <Scene3Reveal />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition
+          presentation={fade()}
+          timing={linearTiming({ durationInFrames: 18 })}
+        />
+        <TransitionSeries.Sequence durationInFrames={180}>
+          <Scene4Explanation />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition
+          presentation={wipe({ direction: "from-bottom" })}
+          timing={springTiming({ durationInFrames: 24, config: { damping: 200 } })}
+        />
+        <TransitionSeries.Sequence durationInFrames={130}>
+          <Scene5Bridge />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition
+          presentation={fade()}
+          timing={linearTiming({ durationInFrames: 18 })}
+        />
+        <TransitionSeries.Sequence durationInFrames={170}>
+          <Scene6Solution />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition
           presentation={fade()}
