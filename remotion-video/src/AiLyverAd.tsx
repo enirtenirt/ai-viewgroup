@@ -489,28 +489,28 @@ export const AiLyverAd: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: C.dark, fontFamily: FONT }}>
       <TransitionSeries>
-        <TransitionSeries.Sequence durationInFrames={130}>
+        <TransitionSeries.Sequence durationInFrames={150}>
           <Scene1Headline />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition
           presentation={fade()}
           timing={linearTiming({ durationInFrames: 18 })}
         />
-        <TransitionSeries.Sequence durationInFrames={140}>
+        <TransitionSeries.Sequence durationInFrames={170}>
           <Scene2Report />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition
           presentation={wipe({ direction: "from-right" })}
           timing={springTiming({ durationInFrames: 24, config: { damping: 200 } })}
         />
-        <TransitionSeries.Sequence durationInFrames={110}>
+        <TransitionSeries.Sequence durationInFrames={150}>
           <Scene3Reveal />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition
           presentation={fade()}
           timing={linearTiming({ durationInFrames: 18 })}
         />
-        <TransitionSeries.Sequence durationInFrames={140}>
+        <TransitionSeries.Sequence durationInFrames={180}>
           <Scene4CTA />
         </TransitionSeries.Sequence>
       </TransitionSeries>
