@@ -5,7 +5,7 @@ export const RemotionRoot = () => (
   <Composition
     id="main"
     component={AiLyverAd}
-    durationInFrames={812}
+    durationInFrames={806}
     fps={30}
     width={1080}
     height={1080}
