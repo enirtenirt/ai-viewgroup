@@ -603,8 +603,8 @@ function CTA() {
           style={serif}
           className="mt-8 text-4xl font-semibold leading-tight tracking-tight md:text-6xl"
         >
-          VIEW Group gir deg<br />
-          <span className="italic font-normal" style={{ color: "#CC99FF" }}>én sannhet for hele konsernet.</span>
+          Opplev ERP-systemet<br />
+          <span className="italic font-normal" style={{ color: "#CC99FF" }}>bygget for konsern.</span>
         </motion.h2>
 
         <motion.p
@@ -615,7 +615,7 @@ function CTA() {
           className="mx-auto mt-8 max-w-xl text-lg"
           style={{ ...serif, color: "#DCBEFA" }}
         >
-          Opplev løsningen selv. Book en 20 min uforpliktende demo.
+          Book en 20 min uforpliktende demo.
         </motion.p>
 
         <motion.a
@@ -623,7 +623,9 @@ function CTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5, duration: 0.9 }}
-          href="mailto:post@viewgroup.no?subject=Book%2020%20min%20demo%20-%20VIEW%20Group"
+          href="https://viewgroup.no/xledger-for-konsern/#Utforsk%20"
+          target="_blank"
+          rel="noopener noreferrer"
           className="mt-12 inline-flex items-center gap-3 rounded-full px-10 py-5 transition hover:opacity-90"
           style={{ ...serif, background: "#FFC832", color: "#190523", fontWeight: 600 }}
         >
