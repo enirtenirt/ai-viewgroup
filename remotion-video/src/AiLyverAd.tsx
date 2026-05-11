@@ -710,6 +710,27 @@ export const AiLyverAd: React.FC = () => {
           timing={linearTiming({ durationInFrames: 18 })}
         />
         <TransitionSeries.Sequence durationInFrames={180}>
+          <Scene4Explanation />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition
+          presentation={wipe({ direction: "from-bottom" })}
+          timing={springTiming({ durationInFrames: 24, config: { damping: 200 } })}
+        />
+        <TransitionSeries.Sequence durationInFrames={130}>
+          <Scene5Bridge />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition
+          presentation={fade()}
+          timing={linearTiming({ durationInFrames: 18 })}
+        />
+        <TransitionSeries.Sequence durationInFrames={170}>
+          <Scene6Solution />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition
+          presentation={fade()}
+          timing={linearTiming({ durationInFrames: 18 })}
+        />
+        <TransitionSeries.Sequence durationInFrames={180}>
           <Scene4CTA />
         </TransitionSeries.Sequence>
       </TransitionSeries>
