@@ -657,7 +657,7 @@ const Scene4CTA: React.FC = () => {
           maxWidth: 760,
         }}
       >
-        Book en 20 min uforpliktende demo.
+        Klar for tall du faktisk kan presentere til styret?
       </div>
 
       <div
