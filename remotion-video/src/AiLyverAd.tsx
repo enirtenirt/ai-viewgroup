@@ -357,8 +357,8 @@ const Scene3Reveal: React.FC = () => {
     >
       <h2
         style={{
-          fontSize: 150,
-          lineHeight: 0.95,
+          fontSize: 130,
+          lineHeight: 0.98,
           fontWeight: 700,
           letterSpacing: -3,
           margin: 0,
@@ -366,15 +366,15 @@ const Scene3Reveal: React.FC = () => {
           transform: `scale(${0.92 + titleSp * 0.08})`,
         }}
       >
-        Tallene
+        Styret ber om
         <br />
-        <span style={{ color: C.pop, fontStyle: "italic" }}>skurrer.</span>
+        <span style={{ color: C.pop, fontStyle: "italic" }}>forklaring.</span>
       </h2>
 
       <div
         style={{
           marginTop: 40,
-          fontSize: 28,
+          fontSize: 36,
           color: C.lighter,
           fontStyle: "italic",
           opacity: subOp,
@@ -382,7 +382,7 @@ const Scene3Reveal: React.FC = () => {
           lineHeight: 1.35,
         }}
       >
-        Magefølelsen sier at dette må sjekkes.
+        Du har ingen gode svar.
       </div>
     </AbsoluteFill>
   );
