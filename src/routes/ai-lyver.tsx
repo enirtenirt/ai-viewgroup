@@ -626,7 +626,7 @@ function CTA() {
           className="mx-auto mt-8 max-w-xl text-lg"
           style={{ ...serif, color: "#DCBEFA" }}
         >
-          Book en 20 min uforpliktende demo.
+          Klar for tall du faktisk kan presentere til styret?
         </motion.p>
 
         <motion.a
