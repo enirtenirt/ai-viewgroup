@@ -643,9 +643,9 @@ const Scene4CTA: React.FC = () => {
           maxWidth: 940,
         }}
       >
-        Opplev ERP-systemet
+        Klar for tall du faktisk kan
         <br />
-        <span style={{ color: C.pop }}>bygget for konsern.</span>
+        <span style={{ color: C.pop, fontStyle: "italic" }}>presentere til styret?</span>
       </h2>
 
       <div
@@ -657,7 +657,7 @@ const Scene4CTA: React.FC = () => {
           maxWidth: 760,
         }}
       >
-        Klar for tall du faktisk kan presentere til styret?
+        Opplev ERP-systemet bygget for konsern.
       </div>
 
       <div

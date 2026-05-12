@@ -614,8 +614,8 @@ function CTA() {
           style={serif}
           className="mt-8 text-4xl font-semibold leading-tight tracking-tight md:text-6xl"
         >
-          Opplev ERP-systemet<br />
-          <span className="italic font-normal" style={{ color: "#CC99FF" }}>bygget for konsern.</span>
+          Klar for tall du faktisk kan<br />
+          <span className="italic font-normal" style={{ color: "#CC99FF" }}>presentere til styret?</span>
         </motion.h2>
 
         <motion.p
@@ -626,7 +626,7 @@ function CTA() {
           className="mx-auto mt-8 max-w-xl text-lg"
           style={{ ...serif, color: "#DCBEFA" }}
         >
-          Klar for tall du faktisk kan presentere til styret?
+          Opplev ERP-systemet bygget for konsern.
         </motion.p>
 
         <motion.a
