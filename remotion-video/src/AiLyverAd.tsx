@@ -62,20 +62,31 @@ const Scene1Headline: React.FC = () => {
         alignItems: "flex-start",
       }}
     >
-      {/* eyebrow */}
+      {/* logo + partner badge */}
       <div
         style={{
-          opacity: interpolate(frame, [0, 18], [0, 1], {
-            extrapolateRight: "clamp",
-          }),
-          fontSize: 18,
-          letterSpacing: 6,
-          fontWeight: 600,
-          color: C.yellow,
+          opacity: interpolate(frame, [0, 18], [0, 1], { extrapolateRight: "clamp" }),
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
           marginBottom: 36,
         }}
       >
-        STYREBRIEFING · Q1
+        <Img
+          src={staticFile("images/view-logo.png")}
+          style={{ height: 36, filter: "brightness(0) invert(1)" }}
+        />
+        <span
+          style={{
+            fontSize: 14,
+            letterSpacing: 4,
+            fontWeight: 600,
+            color: C.light,
+            textTransform: "uppercase",
+          }}
+        >
+          Sertifisert Xledger Partner 2026
+        </span>
       </div>
 
       <h1
