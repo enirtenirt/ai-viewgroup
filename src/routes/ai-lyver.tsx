@@ -500,7 +500,7 @@ function Explanation() {
           Hva skjer når AI møter dårlige datagrunnlag?
         </motion.h2>
         <p className="mt-6 max-w-2xl text-lg text-neutral-600">
-          Tre strukturelle problemer i dataene som ingen AI-modell kan tenke seg ut av.
+          Tre strukturelle problemer i dataene som ingen AI-modell kan kompensere for.
         </p>
 
         <div className="mt-20 space-y-16">
