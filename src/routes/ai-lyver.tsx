@@ -351,7 +351,7 @@ function Reveal() {
           style={serif}
           className="text-6xl leading-none md:text-8xl lg:text-9xl"
         >
-          Tallene<br />skurrer.
+          Styret ber om<br />forklaring.
         </motion.h2>
         <motion.p
           initial={{ opacity: 0 }}
@@ -361,7 +361,7 @@ function Reveal() {
           style={serif}
           className="mx-auto mt-10 max-w-3xl text-2xl italic text-white/80 md:text-3xl"
         >
-          Magefølelsen sier at dette må sjekkes.
+          Du har ingen gode svar.
         </motion.p>
       </div>
     </motion.section>
