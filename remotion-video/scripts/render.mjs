@@ -22,7 +22,7 @@ await renderMedia({
   composition,
   serveUrl: bundled,
   codec: "h264",
-  outputLocation: "/mnt/documents/view-group-ad.mp4",
+  outputLocation: "/mnt/documents/ai-lyver-ad-v8.mp4",
   puppeteerInstance: browser,
   muted: true,
   concurrency: 1,
