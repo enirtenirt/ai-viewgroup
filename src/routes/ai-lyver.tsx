@@ -46,6 +46,17 @@ function Hero({ selskap }: { selskap: string | null }) {
   const words = lead.split(" ");
   return (
     <section className="relative flex min-h-screen items-center justify-center px-6 text-center">
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        className="absolute top-8 left-1/2 -translate-x-1/2 flex items-center gap-3"
+      >
+        <img src={viewLogo} alt="VIEW Group" className="h-7 w-auto" style={{ filter: "brightness(0) invert(1)" }} />
+        <span style={mono} className="text-[10px] uppercase tracking-[0.4em]" >
+          <span style={{ color: "#CC99FF" }}>Sertifisert Xledger Partner 2026</span>
+        </span>
+      </motion.div>
       <div className="max-w-5xl">
         <h1 style={serif} className="text-5xl leading-[1.05] tracking-tight md:text-7xl lg:text-8xl">
           {words.map((w, i) => (
@@ -340,7 +351,7 @@ function Reveal() {
           style={serif}
           className="text-6xl leading-none md:text-8xl lg:text-9xl"
         >
-          Tallene<br />skurrer.
+          Styret ber om<br />forklaring.
         </motion.h2>
         <motion.p
           initial={{ opacity: 0 }}
@@ -350,7 +361,7 @@ function Reveal() {
           style={serif}
           className="mx-auto mt-10 max-w-3xl text-2xl italic text-white/80 md:text-3xl"
         >
-          Magefølelsen sier at dette må sjekkes.
+          Du har ingen gode svar.
         </motion.p>
       </div>
     </motion.section>
@@ -489,7 +500,7 @@ function Explanation() {
           Hva skjer når AI møter dårlige datagrunnlag?
         </motion.h2>
         <p className="mt-6 max-w-2xl text-lg text-neutral-600">
-          Tre strukturelle problemer i dataene som ingen AI-modell kan tenke seg ut av.
+          Tre strukturelle problemer i dataene som ingen AI-modell kan kompensere for.
         </p>
 
         <div className="mt-20 space-y-16">
@@ -615,7 +626,7 @@ function CTA() {
           className="mx-auto mt-8 max-w-xl text-lg"
           style={{ ...serif, color: "#DCBEFA" }}
         >
-          Book en 20 min uforpliktende demo.
+          Klar for tall du faktisk kan presentere til styret?
         </motion.p>
 
         <motion.a
