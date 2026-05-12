@@ -46,6 +46,17 @@ function Hero({ selskap }: { selskap: string | null }) {
   const words = lead.split(" ");
   return (
     <section className="relative flex min-h-screen items-center justify-center px-6 text-center">
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        className="absolute top-8 left-1/2 -translate-x-1/2 flex items-center gap-3"
+      >
+        <img src={viewLogo} alt="VIEW Group" className="h-7 w-auto" style={{ filter: "brightness(0) invert(1)" }} />
+        <span style={mono} className="text-[10px] uppercase tracking-[0.4em]" >
+          <span style={{ color: "#CC99FF" }}>Sertifisert Xledger Partner 2026</span>
+        </span>
+      </motion.div>
       <div className="max-w-5xl">
         <h1 style={serif} className="text-5xl leading-[1.05] tracking-tight md:text-7xl lg:text-8xl">
           {words.map((w, i) => (
