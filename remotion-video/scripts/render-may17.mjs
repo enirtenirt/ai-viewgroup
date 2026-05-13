@@ -11,8 +11,11 @@ const bundled = await bundle({
 });
 
 const browser = await openBrowser("chrome", {
-  browserExecutable: process.env.PUPPETEER_EXECUTABLE_PATH ?? "/bin/chromium",
-  chromiumOptions: { args: ["--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"] },
+  browserExecutable: process.env.PUPPETEER_EXECUTABLE_PATH ?? "/opt/pw-browsers/chromium",
+  chromiumOptions: {
+    ignoreCertificateErrors: true,
+    args: ["--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"],
+  },
   chromeMode: "chrome-for-testing",
 });
 
@@ -26,7 +29,7 @@ await renderMedia({
   composition,
   serveUrl: bundled,
   codec: "h264",
-  outputLocation: "/mnt/documents/view-group-may17.mp4",
+  outputLocation: path.resolve(__dirname, "../output/view-group-may17.mp4"),
   puppeteerInstance: browser,
   muted: true,
   concurrency: 1,

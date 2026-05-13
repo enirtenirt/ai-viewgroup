@@ -8,11 +8,9 @@ import {
   staticFile,
   Series,
 } from "remotion";
-import { loadFont as loadInter } from "@remotion/google-fonts/Inter";
-import { loadFont as loadPlayfair } from "@remotion/google-fonts/PlayfairDisplay";
 
-const inter = loadInter("normal", { weights: ["400", "600", "700", "800"], subsets: ["latin"] });
-const playfair = loadPlayfair("normal", { weights: ["400", "700"], subsets: ["latin"] });
+const FONT_SERIF = "Georgia, 'Times New Roman', serif";
+const FONT_SANS = "Arial, Helvetica, sans-serif";
 
 const FLAG = { red: "#EF2B2D", white: "#FFFFFF", blue: "#002868" };
 const BRAND = { dark: "#3D1547", mid: "#581B66", pop: "#B978F5", light: "#CC99FF" };
@@ -70,7 +68,7 @@ const SceneIntro = () => {
       <div style={{ textAlign: "center", position: "relative", zIndex: 1, padding: "0 60px" }}>
         <div
           style={{
-            fontFamily: playfair.fontFamily,
+            fontFamily: FONT_SERIF,
             fontSize: 96,
             fontWeight: 700,
             color: FLAG.white,
@@ -85,7 +83,7 @@ const SceneIntro = () => {
         <div
           style={{
             marginTop: 32,
-            fontFamily: inter.fontFamily,
+            fontFamily: FONT_SANS,
             fontSize: 36,
             fontWeight: 600,
             color: "#FFD700",
@@ -129,7 +127,7 @@ const SceneCard = ({ emoji, label, bg, accent }: CardData) => {
         </div>
         <div
           style={{
-            fontFamily: inter.fontFamily,
+            fontFamily: FONT_SANS,
             fontSize: 80,
             fontWeight: 700,
             color: FLAG.white,
@@ -171,7 +169,7 @@ const SceneOutro = () => {
       <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
         <div
           style={{
-            fontFamily: playfair.fontFamily,
+            fontFamily: FONT_SERIF,
             fontSize: 56,
             fontWeight: 700,
             color: FLAG.white,
@@ -196,7 +194,7 @@ const SceneOutro = () => {
         <div
           style={{
             marginTop: 24,
-            fontFamily: inter.fontFamily,
+            fontFamily: FONT_SANS,
             fontSize: 20,
             fontWeight: 600,
             color: BRAND.light,
@@ -244,7 +242,7 @@ const SceneLogoEnd = () => {
         <div style={{ height: 2, width: lineW, background: FLAG.white, margin: "28px auto" }} />
         <div
           style={{
-            fontFamily: inter.fontFamily,
+            fontFamily: FONT_SANS,
             fontSize: 28,
             color: FLAG.white,
             opacity: subOp,
@@ -260,7 +258,7 @@ const SceneLogoEnd = () => {
 };
 
 export const May17Video = () => (
-  <AbsoluteFill style={{ fontFamily: inter.fontFamily }}>
+  <AbsoluteFill style={{ fontFamily: FONT_SANS }}>
     <Series>
       <Series.Sequence durationInFrames={75}>
         <SceneIntro />
