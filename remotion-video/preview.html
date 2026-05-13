@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>17. mai – VIEW Group Video Preview</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: Georgia, serif;
+    padding: 20px;
+  }
+  h1 { color: #aaa; font-size: 14px; font-family: sans-serif; margin-bottom: 12px; letter-spacing: 2px; text-transform: uppercase; }
+
+  .player-wrap {
+    position: relative;
+    width: min(540px, 90vw);
+    aspect-ratio: 1;
+  }
+  .screen {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+  }
+
+  /* ── SCENE BASE ── */
+  .scene {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 0;
+    padding: 40px;
+  }
+
+  /* ── CROSS OVERLAY (Norwegian flag) ── */
+  .cross { position: absolute; inset: 0; pointer-events: none; }
+  .cross-h, .cross-v, .cross-hb, .cross-vb { position: absolute; }
+  .cross-h  { top: 43.5%; left: 0; right: 0; height: 13%; background: #fff; }
+  .cross-v  { left: 22%;  top: 0; bottom: 0; width: 13%; background: #fff; }
+  .cross-hb { top: 46%;   left: 0; right: 0; height: 8%;  background: #002868; }
+  .cross-vb { left: 24.5%;top: 0; bottom: 0; width: 8%;   background: #002868; }
+
+  /* ── SCENE 1: INTRO ── */
+  #s-intro {
+    background: linear-gradient(160deg, #EF2B2D 0%, #002868 100%);
+    animation: fade-in-out 2.5s 0s both;
+  }
+  #s-intro .cross { opacity: 0.18; }
+  #s-intro h2 {
+    font-size: clamp(42px, 10vw, 88px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.35);
+    animation: slide-up 0.6s 0.3s both;
+  }
+  #s-intro p {
+    margin-top: 24px;
+    font-size: clamp(18px, 4vw, 32px);
+    font-family: sans-serif;
+    font-weight: 600;
+    color: #FFD700;
+    letter-spacing: 4px;
+    animation: fade-in 0.5s 1s both;
+  }
+
+  /* ── SCENE 2-8: IMAGE CARDS ── */
+  .card {
+    animation: card-flash 1.4s both;
+  }
+  .card .ring {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .card .ring svg { width: 60%; height: 60%; }
+  .card .ring circle {
+    fill: none;
+    stroke-width: 4;
+    animation: ring-expand 0.6s 0.1s both;
+  }
+  .card .emoji {
+    font-size: clamp(100px, 22vw, 220px);
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+    animation: emoji-pop 0.5s 0.13s both;
+  }
+  .card .label {
+    font-family: sans-serif;
+    font-size: clamp(32px, 7vw, 68px);
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 3px;
+    position: relative;
+    z-index: 1;
+    margin-top: 12px;
+    text-shadow: 0 3px 16px rgba(0,0,0,0.3);
+    animation: slide-up 0.4s 0.4s both;
+  }
+
+  #s-bunad    { background: linear-gradient(135deg, #8B4513 0%, #CD853F 100%); animation-delay: 2.5s; }
+  #s-is       { background: linear-gradient(135deg, #FF69B4 0%, #FFB6C1 100%); animation-delay: 3.9s; }
+  #s-polser   { background: linear-gradient(135deg, #CC4400 0%, #FF6600 100%); animation-delay: 5.3s; }
+  #s-champagne{ background: linear-gradient(135deg, #B8860B 0%, #FFD700 100%); animation-delay: 6.7s; }
+  #s-sol      { background: linear-gradient(135deg, #FF8C00 0%, #FFD700 100%); animation-delay: 8.1s; }
+  #s-flagg    { background: linear-gradient(160deg, #EF2B2D 0%, #002868 100%); animation-delay: 9.5s; }
+  #s-korps    { background: linear-gradient(135deg, #1A237E 0%, #3949AB 100%); animation-delay: 10.9s; }
+
+  #s-bunad    .ring circle { stroke: #FFD700; }
+  #s-is       .ring circle { stroke: #fff; }
+  #s-polser   .ring circle { stroke: #FFD700; }
+  #s-champagne .ring circle { stroke: #FFF8DC; }
+  #s-sol      .ring circle { stroke: #fff; }
+  #s-flagg    .ring circle { stroke: #fff; }
+  #s-korps    .ring circle { stroke: #FFD700; }
+
+  /* card animation delays must match scene delay */
+  #s-bunad     .emoji, #s-bunad     .label { animation-delay: 2.63s; }
+  #s-is        .emoji, #s-is        .label { animation-delay: 4.03s; }
+  #s-polser    .emoji, #s-polser    .label { animation-delay: 5.43s; }
+  #s-champagne .emoji, #s-champagne .label { animation-delay: 6.83s; }
+  #s-sol       .emoji, #s-sol       .label { animation-delay: 8.23s; }
+  #s-flagg     .emoji, #s-flagg     .label { animation-delay: 9.63s; }
+  #s-korps     .emoji, #s-korps     .label { animation-delay: 11.03s; }
+
+  #s-bunad     .ring circle { animation-delay: 2.57s; }
+  #s-is        .ring circle { animation-delay: 3.97s; }
+  #s-polser    .ring circle { animation-delay: 5.37s; }
+  #s-champagne .ring circle { animation-delay: 6.77s; }
+  #s-sol       .ring circle { animation-delay: 8.17s; }
+  #s-flagg     .ring circle { animation-delay: 9.57s; }
+  #s-korps     .ring circle { animation-delay: 10.97s; }
+
+  /* ── SCENE 9: OUTRO ── */
+  #s-outro {
+    background: linear-gradient(135deg, #002868 0%, #EF2B2D 100%);
+    animation: fade-in-out 1.7s 12.3s both;
+    padding: 50px;
+  }
+  #s-outro .cross { opacity: 0.1; }
+  #s-outro h2 {
+    font-size: clamp(24px, 5vw, 50px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+    text-shadow: 0 3px 20px rgba(0,0,0,0.3);
+    animation: slide-up 0.5s 12.57s both;
+  }
+  #s-outro .emojis {
+    font-size: clamp(32px, 6vw, 64px);
+    margin-top: 20px;
+    animation: fade-in 0.4s 12.97s both;
+  }
+  #s-outro .byline {
+    margin-top: 16px;
+    font-family: sans-serif;
+    font-size: clamp(12px, 2vw, 18px);
+    font-weight: 600;
+    color: #CC99FF;
+    letter-spacing: 4px;
+    animation: fade-in 0.4s 13.3s both;
+  }
+
+  /* ── SCENE 10: LOGO ── */
+  #s-logo {
+    background: linear-gradient(135deg, #CC99FF 0%, #B978F5 100%);
+    animation: fade-in 0.5s 14s both;
+  }
+  #s-logo .logo-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: pop-in 0.5s 14s both;
+  }
+  #s-logo img {
+    height: clamp(80px, 16vw, 160px);
+    filter: brightness(0) invert(1);
+  }
+  #s-logo .line {
+    height: 2px;
+    background: #fff;
+    margin: 20px 0;
+    animation: line-grow 0.6s 14.33s both;
+  }
+  #s-logo .subtitle {
+    font-family: sans-serif;
+    font-size: clamp(14px, 3vw, 26px);
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 3px;
+    animation: fade-in 0.4s 14.67s both;
+  }
+
+  /* ── KEYFRAMES ── */
+  @keyframes fade-in-out {
+    0%   { opacity: 0; }
+    8%   { opacity: 1; }
+    88%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  @keyframes card-flash {
+    0%   { opacity: 0; }
+    15%  { opacity: 1; }
+    83%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes emoji-pop {
+    0%   { opacity: 0; transform: scale(0.4); }
+    70%  { transform: scale(1.08); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pop-in {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes ring-expand {
+    from { r: 0; opacity: 0; }
+    to   { r: 45%; opacity: 0.4; }
+  }
+  @keyframes line-grow {
+    from { width: 0; }
+    to   { width: 260px; }
+  }
+
+  /* ── CONTROLS ── */
+  .controls {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  button {
+    background: #333;
+    border: 1px solid #555;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+    transition: background 0.15s;
+  }
+  button:hover { background: #444; }
+  .duration { color: #666; font-family: monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>17. mai – VIEW Group · 15 sek · 1:1 preview</h1>
+
+<div class="player-wrap">
+  <div class="screen" id="screen">
+
+    <!-- INTRO -->
+    <div class="scene" id="s-intro">
+      <div class="cross">
+        <div class="cross-h"></div><div class="cross-v"></div>
+        <div class="cross-hb"></div><div class="cross-vb"></div>
+      </div>
+      <h2>Gratulerer<br>med dagen!</h2>
+      <p>🇳🇴 17. mai 🇳🇴</p>
+    </div>
+
+    <!-- BUNAD -->
+    <div class="scene card" id="s-bunad">
+      <div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="0"/></svg></div>
+      <div class="emoji">👘</div>
+      <div class="label">Bunad</div>
+    </div>
+
+    <!-- IS -->
+    <div class="scene card" id="s-is">
+      <div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="0"/></svg></div>
+      <div class="emoji">🍦</div>
+      <div class="label">Is</div>
+    </div>
+
+    <!-- PØLSER -->
+    <div class="scene card" id="s-polser">
+      <div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="0"/></svg></div>
+      <div class="emoji">🌭</div>
+      <div class="label">Pølser</div>
+    </div>
+
+    <!-- CHAMPAGNE -->
+    <div class="scene card" id="s-champagne">
+      <div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="0"/></svg></div>
+      <div class="emoji">🥂</div>
+      <div class="label">Champagne</div>
+    </div>
+
+    <!-- SOL -->
+    <div class="scene card" id="s-sol">
+      <div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="0"/></svg></div>
+      <div class="emoji">☀️</div>
+      <div class="label">Sol</div>
+    </div>
+
+    <!-- FLAGG -->
+    <div class="scene card" id="s-flagg">
+      <div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="0"/></svg></div>
+      <div class="emoji">🇳🇴</div>
+      <div class="label">Flagg</div>
+    </div>
+
+    <!-- KORPS -->
+    <div class="scene card" id="s-korps">
+      <div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="0"/></svg></div>
+      <div class="emoji">🎺</div>
+      <div class="label">Korps</div>
+    </div>
+
+    <!-- OUTRO -->
+    <div class="scene" id="s-outro">
+      <div class="cross">
+        <div class="cross-h"></div><div class="cross-v"></div>
+        <div class="cross-hb"></div><div class="cross-vb"></div>
+      </div>
+      <h2>Vi i VIEW Group ønsker<br>alle sammen en fin<br>17. mai feiring!</h2>
+      <div class="emojis">🇳🇴 🎉 🇳🇴</div>
+      <div class="byline">VIEW GROUP</div>
+    </div>
+
+    <!-- LOGO -->
+    <div class="scene" id="s-logo">
+      <div class="logo-wrap">
+        <img src="public/images/view-logo.png" alt="VIEW Group" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <div style="display:none; color:#fff; font-size:clamp(28px,6vw,56px); font-weight:800; letter-spacing:4px; font-family:sans-serif;">VIEW<span style="color:#3D1547">.</span></div>
+        <div class="line"></div>
+        <div class="subtitle">God 17. mai! 🇳🇴</div>
+      </div>
+    </div>
+
+  </div><!-- /screen -->
+</div><!-- /player-wrap -->
+
+<div class="controls">
+  <button onclick="restart()">↺ Spill av igjen</button>
+  <span class="duration">15 sek · 30fps · 1080×1080</span>
+</div>
+
+<script>
+function restart() {
+  const screen = document.getElementById('screen');
+  screen.style.display = 'none';
+  void screen.offsetHeight; // reflow
+  screen.style.display = '';
+}
+</script>
+</body>
+</html>
