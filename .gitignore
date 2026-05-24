@@ -20,6 +20,9 @@ dist-ssr
 .wrangler/
 .dev.vars
 
+# Rendered video output
+output/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
