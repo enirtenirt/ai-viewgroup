@@ -2,9 +2,8 @@ import {
   AbsoluteFill,
   useCurrentFrame,
   interpolate,
+  spring,
   useVideoConfig,
-  Img,
-  staticFile,
 } from "remotion";
 import { loadFont as loadInter } from "@remotion/google-fonts/Inter";
 import { loadFont as loadPlayfair } from "@remotion/google-fonts/PlayfairDisplay";
@@ -18,168 +17,118 @@ const playfair = loadPlayfair("normal", {
   subsets: ["latin"],
 });
 
+// VIEW Group brand palette
 const C = {
-  bg1: "#150720",
-  bg2: "#2C0A40",
+  bg: "#160822",
+  bg2: "#2E0A44",
   purple: "#7B2FA0",
   lavender: "#CC99FF",
   border: "#B978F5",
   white: "#FFFFFF",
+  kpiBg: "#F0E4FF",
+  green: "#16A34A",
+  amber: "#EA580C",
+  darkText: "#1E0830",
+  midPurple: "#6B3A8E",
 };
 
-const LENS_R = 115;
-
-// Timing (frames at 30 fps)
-// Lines 1–2 of the message are revealed by the glass.
-// Lines 3–5 fade in after.
-const T = {
-  bgIn: 22,
-  glassAppear: 28,
-  // sweep 1: left → right, across display lines 1–2 of msg line 1
-  s1Start: 32,
-  s1End: 130,
-  // drop to next display line
-  dropMid: 150,
-  // sweep 2: right → left, lines 3–4 of display (wrapping msg line 1 + msg line 2)
-  s2Start: 160,
-  s2End: 255,
-  // glass fades out
-  glassFadeStart: 265,
-  glassFadeEnd: 295,
-  // remaining text fades in
-  fullReveal: 270,
-  line3In: 295,
-  line4In: 340,
-  ctaIn: 385,
-  logoIn: 420,
-  end: 470,
-};
-
-// Shared text position (same for dim and clear layers so clip-path aligns)
+const LENS_R = 160;
 const TEXT_LEFT = 80;
 const TEXT_TOP = 220;
+// Center Y of the 4-line text block (58px × 1.3 lineHeight × 4 lines ≈ 302px, starting at TEXT_TOP)
+const LENS_Y = TEXT_TOP + 151;
+
+// ─── Timing (360 frames = 12 s at 30 fps) ─────────────────────────────────
+const T = {
+  bgIn: 14,
+  glassIn: 20,
+  sweepStart: 24,
+  sweepEnd: 108,       // ~2.8 s to sweep across
+  glassFadeEnd: 123,
+  line3In: 120,
+  line4In: 148,
+  textFadeStart: 185,  // all text starts fading
+  textFadeEnd: 210,
+  // Scene 3: dashboard
+  cardStart: 195,
+  topLabelIn: 198,
+  kpiIn: [242, 258, 274, 290] as const,
+  barsStart: 296,
+  ctaIn: 308,
+  end: 360,
+};
 
 export const MagnifyingGlassAd = () => {
   const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
 
+  // ── Background ─────────────────────────────────────────────
   const bgOp = interpolate(frame, [0, T.bgIn], [0, 1], {
     extrapolateRight: "clamp",
   });
 
-  // ── Lens position ────────────────────────────────────────────
-  // Display lines of "Forstørrelsesglasset…" at 58px, lineHeight 1.3 ≈ 75px each
-  // Text top 220 → line centers approx:  258, 333, 408, 483
-  const Y_L1 = 262; // display line 1
-  const Y_L2 = 337; // display line 2
-  const Y_L3 = 412; // display line 3 (end of msg line 1 + msg line 2)
-  const Y_L4 = 487; // display line 4 ("hvis ingen…")
-
-  // Phase 1: sweep left → right at Y_L1 / Y_L2
-  const xPhase1 = interpolate(frame, [T.s1Start, T.s1End], [160, 960], {
+  // ── Magnifying glass ───────────────────────────────────────
+  const lensX = interpolate(frame, [T.sweepStart, T.sweepEnd], [80, 1000], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const yPhase1 = interpolate(
-    frame,
-    [T.s1Start, T.s1End],
-    [Y_L1, Y_L2],
-    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-  );
-
-  // Phase 2: sweep right → left at Y_L3 / Y_L4
-  const xPhase2 = interpolate(frame, [T.s2Start, T.s2End], [960, 160], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const yPhase2 = interpolate(
-    frame,
-    [T.s2Start, T.s2End],
-    [Y_L3, Y_L4],
-    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-  );
-
-  // Drop transition between sweeps
-  const xDrop = interpolate(
-    frame,
-    [T.s1End, T.dropMid, T.s2Start],
-    [960, 960, 960],
-    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-  );
-  const yDrop = interpolate(
-    frame,
-    [T.s1End, T.dropMid, T.s2Start],
-    [Y_L2, (Y_L2 + Y_L3) / 2, Y_L3],
-    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-  );
-
-  let lensX: number;
-  let lensY: number;
-  if (frame <= T.s1End) {
-    lensX = xPhase1;
-    lensY = yPhase1;
-  } else if (frame <= T.s2Start) {
-    lensX = xDrop;
-    lensY = yDrop;
-  } else {
-    lensX = xPhase2;
-    lensY = yPhase2;
-  }
-
-  // ── Opacities ────────────────────────────────────────────────
   const glassOp = interpolate(
     frame,
-    [T.glassAppear - 8, T.glassAppear, T.glassFadeStart, T.glassFadeEnd],
+    [T.glassIn - 6, T.glassIn, T.sweepEnd + 6, T.glassFadeEnd],
     [0, 1, 1, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
 
+  // ── Text ───────────────────────────────────────────────────
+  const textBlockOp = interpolate(
+    frame,
+    [T.textFadeStart, T.textFadeEnd],
+    [1, 0],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+  );
   const fullRevealOp = interpolate(
     frame,
-    [T.fullReveal, T.glassFadeEnd],
+    [T.sweepEnd, T.glassFadeEnd],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
+  const fadeIn = (start: number, dur = 24) =>
+    interpolate(frame, [start, start + dur], [0, 1], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    });
+  const slideIn = (start: number, dur = 24, dist = 12) =>
+    interpolate(frame, [start, start + dur], [dist, 0], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    });
 
-  const line3Op = interpolate(frame, [T.line3In, T.line3In + 28], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
+  // ── Dashboard card ──────────────────────────────────────────
+  const cardSpring = spring({
+    frame: frame - T.cardStart,
+    fps,
+    config: { damping: 22, stiffness: 100, mass: 1 },
   });
-  const line3Shift = interpolate(frame, [T.line3In, T.line3In + 28], [14, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
+  const cardOp = fadeIn(T.cardStart, 20);
 
-  const line4Op = interpolate(frame, [T.line4In, T.line4In + 28], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const line4Shift = interpolate(frame, [T.line4In, T.line4In + 28], [14, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
+  const kpiSprings = T.kpiIn.map((s) =>
+    spring({ frame: frame - s, fps, config: { damping: 18, stiffness: 240 } })
+  );
 
-  const ctaOp = interpolate(frame, [T.ctaIn, T.ctaIn + 28], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const ctaShift = interpolate(frame, [T.ctaIn, T.ctaIn + 28], [14, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
-  const logoOp = interpolate(frame, [T.logoIn, T.logoIn + 22], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
-  const headerOp = interpolate(frame, [5, 25], [0, 1], {
-    extrapolateRight: "clamp",
+  const BAR_COUNT = 12;
+  const barVals = [0.42, 0.50, 0.46, 0.53, 0.57, 0.61, 0.59, 0.65, 0.70, 0.76, 0.80, 0.88];
+  const barProgress = Array.from({ length: BAR_COUNT }, (_, i) => {
+    const s = T.barsStart + i * 4;
+    return interpolate(frame, [s, s + 28], [0, 1], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    });
   });
 
-  const clipPath = `circle(${LENS_R}px at ${lensX}px ${lensY}px)`;
+  const clipPath = `circle(${LENS_R}px at ${lensX}px ${LENS_Y}px)`;
 
-  const textPos: React.CSSProperties = {
-    position: "absolute",
+  const textPos = {
+    position: "absolute" as const,
     left: TEXT_LEFT,
     right: TEXT_LEFT,
     top: TEXT_TOP,
@@ -188,171 +137,122 @@ export const MagnifyingGlassAd = () => {
   return (
     <AbsoluteFill
       style={{
-        background: `radial-gradient(ellipse at 28% 18%, #3D1250 0%, #1A0828 55%, ${C.bg1} 100%)`,
+        background: `radial-gradient(ellipse at 25% 18%, #3D1250 0%, #1F0930 55%, ${C.bg} 100%)`,
         opacity: bgOp,
       }}
     >
-      <FinancialBg frame={frame} />
+      {/* ════════════ SCENE 1 + 2 : TEXT REVEAL ════════════ */}
+      <div style={{ opacity: textBlockOp }}>
+        {/* Dim ghost text */}
+        <div style={{ ...textPos, opacity: 0.08 }}>
+          <MainLines pf={playfair.fontFamily} />
+        </div>
 
-      {/* Header logo */}
-      <div
-        style={{
-          position: "absolute",
-          left: 80,
-          right: 80,
-          top: 68,
-          opacity: headerOp,
-        }}
-      >
-        <Img
-          src={staticFile("images/view-logo.png")}
-          style={{ height: 40, filter: "brightness(0) invert(1)" }}
-        />
-      </div>
+        {/* Text visible through the lens */}
+        {glassOp > 0.005 && (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              clipPath,
+              WebkitClipPath: clipPath,
+              opacity: glassOp,
+            }}
+          >
+            <div style={textPos}>
+              <MainLines pf={playfair.fontFamily} />
+            </div>
+          </div>
+        )}
 
-      {/* Dim background text (always visible at low opacity) */}
-      <div style={{ ...textPos, opacity: 0.09 }}>
-        <MainLines pf={playfair.fontFamily} />
-      </div>
+        {/* Full reveal once glass exits */}
+        <div style={{ ...textPos, opacity: fullRevealOp }}>
+          <MainLines pf={playfair.fontFamily} />
+        </div>
 
-      {/* Clear text clipped to the lens */}
-      {glassOp > 0.01 && (
+        {/* "Dette gjelder spesielt i regnskapet." */}
         <div
           style={{
             position: "absolute",
-            inset: 0,
-            clipPath,
-            WebkitClipPath: clipPath,
-            opacity: glassOp,
+            left: TEXT_LEFT,
+            right: TEXT_LEFT,
+            top: 565,
+            opacity: fadeIn(T.line3In),
+            transform: `translateY(${slideIn(T.line3In)}px)`,
           }}
         >
-          <div style={textPos}>
-            <MainLines pf={playfair.fontFamily} />
-          </div>
-        </div>
-      )}
-
-      {/* Full reveal after glass exits */}
-      <div style={{ ...textPos, opacity: fullRevealOp }}>
-        <MainLines pf={playfair.fontFamily} />
-      </div>
-
-      {/* Line 3: "Dette gjelder spesielt i regnskapet." */}
-      <div
-        style={{
-          position: "absolute",
-          left: TEXT_LEFT,
-          right: TEXT_LEFT,
-          top: 555,
-          opacity: line3Op,
-          transform: `translateY(${line3Shift}px)`,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: playfair.fontFamily,
-            fontSize: 50,
-            fontWeight: 400,
-            fontStyle: "italic",
-            color: C.lavender,
-            lineHeight: 1.3,
-          }}
-        >
-          Dette gjelder spesielt i regnskapet.
-        </span>
-      </div>
-
-      {/* Line 4: question */}
-      <div
-        style={{
-          position: "absolute",
-          left: TEXT_LEFT,
-          right: TEXT_LEFT,
-          top: 645,
-          opacity: line4Op,
-          transform: `translateY(${line4Shift}px)`,
-        }}
-      >
-        <p
-          style={{
-            fontFamily: inter.fontFamily,
-            fontSize: 38,
-            fontWeight: 400,
-            color: C.white,
-            margin: 0,
-            lineHeight: 1.45,
-          }}
-        >
-          Tallene dine forteller en historie.
-          <br />
-          <span style={{ color: C.lavender }}>
-            Får du hjelp til å lese den riktig?
+          <span
+            style={{
+              fontFamily: playfair.fontFamily,
+              fontSize: 46,
+              fontWeight: 400,
+              fontStyle: "italic",
+              color: C.lavender,
+              lineHeight: 1.3,
+            }}
+          >
+            Dette gjelder spesielt i regnskapet.
           </span>
-        </p>
-      </div>
+        </div>
 
-      {/* Line 5: CTA */}
-      <div
-        style={{
-          position: "absolute",
-          left: TEXT_LEFT,
-          right: TEXT_LEFT,
-          top: 800,
-          opacity: ctaOp,
-          transform: `translateY(${ctaShift}px)`,
-        }}
-      >
-        <p
+        {/* Question */}
+        <div
           style={{
-            fontFamily: inter.fontFamily,
-            fontSize: 30,
-            fontWeight: 500,
-            color: "rgba(255,255,255,0.82)",
-            margin: 0,
-            lineHeight: 1.55,
+            position: "absolute",
+            left: TEXT_LEFT,
+            right: TEXT_LEFT,
+            top: 650,
+            opacity: fadeIn(T.line4In),
+            transform: `translateY(${slideIn(T.line4In)}px)`,
           }}
         >
-          VIEW Group gir selskaper{" "}
-          <span style={{ color: C.white, fontWeight: 700 }}>fastpris</span>,
-          bedre innsikt
-          <br />
-          og en partner som faktisk bidrar – ikke bare bokfører.
-        </p>
+          <p
+            style={{
+              fontFamily: inter.fontFamily,
+              fontSize: 37,
+              fontWeight: 400,
+              color: C.white,
+              margin: 0,
+              lineHeight: 1.45,
+            }}
+          >
+            Tallene dine forteller en historie.
+            <br />
+            <span style={{ color: C.lavender }}>
+              Får du hjelp til å lese den riktig?
+            </span>
+          </p>
+        </div>
       </div>
 
       {/* Magnifying glass SVG */}
-      {glassOp > 0.01 && (
+      {glassOp > 0.005 && (
         <svg
           style={{
             position: "absolute",
             inset: 0,
             width: "100%",
             height: "100%",
-            opacity: glassOp,
+            opacity: glassOp * textBlockOp,
             pointerEvents: "none",
             overflow: "visible",
           }}
         >
-          {/* Outer soft glow ring */}
+          {/* Outer glow ring */}
           <circle
             cx={lensX}
-            cy={lensY}
-            r={LENS_R + 22}
+            cy={LENS_Y}
+            r={LENS_R + 24}
             fill="none"
-            stroke="rgba(185,120,245,0.14)"
-            strokeWidth={22}
+            stroke="rgba(185,120,245,0.12)"
+            strokeWidth={24}
           />
           {/* Lens tint */}
+          <circle cx={lensX} cy={LENS_Y} r={LENS_R} fill="rgba(90,30,140,0.08)" />
+          {/* Lens ring */}
           <circle
             cx={lensX}
-            cy={lensY}
-            r={LENS_R}
-            fill="rgba(90,30,140,0.10)"
-          />
-          {/* Lens border */}
-          <circle
-            cx={lensX}
-            cy={lensY}
+            cy={LENS_Y}
             r={LENS_R}
             fill="none"
             stroke={C.border}
@@ -360,60 +260,239 @@ export const MagnifyingGlassAd = () => {
           />
           {/* Handle */}
           <line
-            x1={lensX + LENS_R * 0.71 - 5}
-            y1={lensY + LENS_R * 0.71 - 5}
-            x2={lensX + LENS_R * 0.71 + 82}
-            y2={lensY + LENS_R * 0.71 + 82}
+            x1={lensX + LENS_R * 0.707 - 4}
+            y1={LENS_Y + LENS_R * 0.707 - 4}
+            x2={lensX + LENS_R * 0.707 + 86}
+            y2={LENS_Y + LENS_R * 0.707 + 86}
             stroke={C.border}
             strokeWidth={13}
             strokeLinecap="round"
           />
-          {/* Inner highlight gleam */}
+          {/* Gleam */}
           <ellipse
-            cx={lensX - 36}
-            cy={lensY - 40}
-            rx={26}
+            cx={lensX - 38}
+            cy={LENS_Y - 42}
+            rx={28}
             ry={18}
-            fill="rgba(255,255,255,0.07)"
-            transform={`rotate(-30 ${lensX - 36} ${lensY - 40})`}
+            fill="rgba(255,255,255,0.06)"
+            transform={`rotate(-30 ${lensX - 38} ${LENS_Y - 42})`}
           />
         </svg>
       )}
 
-      {/* Footer */}
-      <div
-        style={{
-          position: "absolute",
-          left: 80,
-          right: 80,
-          bottom: 68,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          opacity: logoOp,
-        }}
-      >
-        <Img
-          src={staticFile("images/view-logo.png")}
-          style={{ height: 36, filter: "brightness(0) invert(1)" }}
-        />
-        <span
-          style={{
-            fontFamily: inter.fontFamily,
-            fontSize: 17,
-            color: C.lavender,
-            letterSpacing: 2.2,
-            fontWeight: 600,
-          }}
-        >
-          REGNSKAP · INNSIKT · FASTPRIS
-        </span>
-      </div>
+      {/* ════════════ SCENE 3 : DASHBOARD ════════════ */}
+      {cardOp > 0.005 && (
+        <>
+          {/* Small label above card */}
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              top: 60,
+              textAlign: "center",
+              opacity: fadeIn(T.topLabelIn, 20),
+            }}
+          >
+            <span
+              style={{
+                fontFamily: inter.fontFamily,
+                fontSize: 15,
+                fontWeight: 600,
+                color: C.lavender,
+                letterSpacing: 3,
+                textTransform: "uppercase",
+              }}
+            >
+              VIEW Group · Regnskap &amp; Innsikt
+            </span>
+          </div>
+
+          {/* Dashboard card */}
+          <div
+            style={{
+              position: "absolute",
+              left: 58,
+              right: 58,
+              top: 108,
+              background: "#FFFFFF",
+              borderRadius: 22,
+              padding: "42px 48px",
+              boxShadow: "0 12px 80px rgba(80,15,130,0.42), 0 2px 20px rgba(0,0,0,0.22)",
+              opacity: cardOp,
+              transform: `translateY(${(1 - cardSpring) * 44}px) scale(${0.80 + cardSpring * 0.20})`,
+              transformOrigin: "50% 0%",
+            }}
+          >
+            {/* Traffic lights + label */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 26,
+              }}
+            >
+              <div style={{ display: "flex", gap: 7 }}>
+                {["#FF5F57", "#FEBC2E", "#28C840"].map((col, i) => (
+                  <div
+                    key={i}
+                    style={{ width: 13, height: 13, borderRadius: 7, background: col }}
+                  />
+                ))}
+              </div>
+              <span
+                style={{
+                  fontFamily: inter.fontFamily,
+                  fontSize: 14,
+                  color: C.midPurple,
+                  fontWeight: 600,
+                  letterSpacing: 0.4,
+                }}
+              >
+                OverVIEW · Konsern
+              </span>
+            </div>
+
+            {/* KPI 2 × 2 */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 13,
+                marginBottom: 24,
+              }}
+            >
+              {(
+                [
+                  { label: "Omsetning YTD", value: "48,2 MNOK", delta: "+12,4%", pos: true },
+                  { label: "EBITDA-margin", value: "18,7 %", delta: "+2,1pp", pos: true },
+                  { label: "Likviditet", value: "6,4 MNOK", delta: "–3 dager", pos: false },
+                  { label: "AR > 30 d", value: "1,2 MNOK", delta: "–18%", pos: false },
+                ] as const
+              ).map((item, i) => (
+                <div
+                  key={i}
+                  style={{
+                    background: C.kpiBg,
+                    borderRadius: 13,
+                    padding: "15px 18px",
+                    opacity: kpiSprings[i],
+                    transform: `scale(${0.88 + kpiSprings[i] * 0.12})`,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: inter.fontFamily,
+                      fontSize: 11,
+                      color: C.midPurple,
+                      fontWeight: 700,
+                      textTransform: "uppercase",
+                      letterSpacing: 0.8,
+                      marginBottom: 5,
+                    }}
+                  >
+                    {item.label}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: inter.fontFamily,
+                      fontSize: 28,
+                      fontWeight: 700,
+                      color: C.darkText,
+                      lineHeight: 1,
+                      marginBottom: 5,
+                    }}
+                  >
+                    {item.value}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: inter.fontFamily,
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: item.pos ? C.green : C.amber,
+                    }}
+                  >
+                    {item.delta}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Bar chart */}
+            <div>
+              <div
+                style={{
+                  fontFamily: inter.fontFamily,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#7B5A9A",
+                  marginBottom: 12,
+                  letterSpacing: 0.3,
+                }}
+              >
+                Resultat – siste 12 mnd
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-end",
+                  gap: 6,
+                  height: 88,
+                }}
+              >
+                {barVals.map((v, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      flex: 1,
+                      height: `${v * barProgress[i] * 100}%`,
+                      background: "linear-gradient(to top, #7B2FA0, #B978F5)",
+                      borderRadius: "3px 3px 0 0",
+                      minWidth: 0,
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* CTA below card */}
+          <div
+            style={{
+              position: "absolute",
+              left: 80,
+              right: 80,
+              bottom: 88,
+              textAlign: "center",
+              opacity: fadeIn(T.ctaIn, 26),
+              transform: `translateY(${slideIn(T.ctaIn, 26, 10)}px)`,
+            }}
+          >
+            <p
+              style={{
+                fontFamily: inter.fontFamily,
+                fontSize: 27,
+                fontWeight: 500,
+                color: "rgba(255,255,255,0.88)",
+                margin: 0,
+                lineHeight: 1.5,
+              }}
+            >
+              VIEW Group –{" "}
+              <span style={{ color: C.lavender, fontWeight: 700 }}>fastpris</span>
+              , bedre innsikt og en partner
+              <br />
+              som faktisk bidrar – ikke bare bokfører.
+            </p>
+          </div>
+        </>
+      )}
     </AbsoluteFill>
   );
 };
 
-// The two revealed lines (user's message lines 1 & 2)
 const MainLines = ({ pf }: { pf: string }) => (
   <div
     style={{
@@ -436,58 +515,3 @@ const MainLines = ({ pf }: { pf: string }) => (
     </span>
   </div>
 );
-
-// Faint floating financial numbers in the background
-const FinancialBg = ({ frame }: { frame: number }) => {
-  const items = [
-    { text: "48,2 MNOK", x: 68, y: 130 },
-    { text: "EBITDA", x: 310, y: 150 },
-    { text: "+12,4%", x: 620, y: 110 },
-    { text: "18,7 %", x: 820, y: 155 },
-    { text: "Likviditet", x: 140, y: 660 },
-    { text: "6,4 MNOK", x: 400, y: 680 },
-    { text: "AR > 30 d", x: 700, y: 655 },
-    { text: "–18%", x: 880, y: 680 },
-    { text: "Resultat", x: 80, y: 890 },
-    { text: "1,2 MNOK", x: 330, y: 905 },
-    { text: "KPI", x: 640, y: 880 },
-    { text: "Avvik", x: 820, y: 900 },
-    { text: "+2,1pp", x: 200, y: 965 },
-    { text: "Q1 2025", x: 500, y: 960 },
-    { text: "Budget", x: 760, y: 950 },
-  ];
-
-  const op = interpolate(frame, [12, 35], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
-  return (
-    <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-      {items.map((item, i) => {
-        const drift = interpolate(frame, [0, 470], [0, (i % 2 === 0 ? 1 : -1) * 18], {
-          extrapolateRight: "clamp",
-        });
-        return (
-          <div
-            key={i}
-            style={{
-              position: "absolute",
-              left: item.x,
-              top: item.y + drift,
-              fontFamily: "monospace",
-              fontSize: 17,
-              color: "rgba(185,120,245,0.16)",
-              fontWeight: 600,
-              letterSpacing: 0.8,
-              whiteSpace: "nowrap",
-              opacity: op,
-            }}
-          >
-            {item.text}
-          </div>
-        );
-      })}
-    </div>
-  );
-};
