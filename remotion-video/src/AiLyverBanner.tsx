@@ -380,7 +380,7 @@ const S4: React.FC = () => {
       <div
         style={{
           marginTop: 14,
-          fontSize: 18,
+          fontSize: 22,
           color: "#555",
           opacity: sub,
           lineHeight: 1.45,
