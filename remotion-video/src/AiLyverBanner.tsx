@@ -107,7 +107,7 @@ const S1: React.FC = () => {
       <div
         style={{
           marginTop: 12,
-          fontSize: 18,
+          fontSize: 22,
           color: C.lighter,
           fontStyle: "italic",
           opacity: sub,
@@ -380,7 +380,7 @@ const S4: React.FC = () => {
       <div
         style={{
           marginTop: 14,
-          fontSize: 18,
+          fontSize: 22,
           color: "#555",
           opacity: sub,
           lineHeight: 1.45,
@@ -434,7 +434,7 @@ const S5: React.FC = () => {
         <div
           style={{
             marginTop: 10,
-            fontSize: 16,
+            fontSize: 20,
             color: C.lighter,
             opacity: interpolate(frame, [20, 40], [0, 1], { extrapolateRight: "clamp" }),
             lineHeight: 1.45,
