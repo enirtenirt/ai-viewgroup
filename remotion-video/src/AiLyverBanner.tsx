@@ -420,8 +420,8 @@ const S5: React.FC = () => {
       <div style={{ flex: 1.5 }}>
         <h2
           style={{
-            fontSize: 26,
-            lineHeight: 1.1,
+            fontSize: 30,
+            lineHeight: 1.15,
             fontWeight: 700,
             letterSpacing: -0.8,
             margin: 0,
@@ -434,11 +434,11 @@ const S5: React.FC = () => {
         <div
           style={{
             marginTop: 10,
-            fontSize: 14,
+            fontSize: 16,
             color: C.lighter,
             opacity: interpolate(frame, [20, 40], [0, 1], { extrapolateRight: "clamp" }),
-            lineHeight: 1.4,
-            maxWidth: 520,
+            lineHeight: 1.45,
+            maxWidth: 540,
           }}
         >
           Vi hjelper konsern samle forretningsinnsikt i én plattform.
