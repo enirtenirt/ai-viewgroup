@@ -434,7 +434,7 @@ const S5: React.FC = () => {
         <div
           style={{
             marginTop: 10,
-            fontSize: 16,
+            fontSize: 20,
             color: C.lighter,
             opacity: interpolate(frame, [20, 40], [0, 1], { extrapolateRight: "clamp" }),
             lineHeight: 1.45,
