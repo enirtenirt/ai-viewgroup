@@ -348,9 +348,6 @@ const S4: React.FC = () => {
   const sub = interpolate(frame, [30, 55], [0, 1], { extrapolateRight: "clamp" });
   const logoOp = interpolate(frame, [0, 14], [0, 1], { extrapolateRight: "clamp" });
 
-  // visual: many sources collapse into ONE
-  const merge = interpolate(frame, [10, 60], [0, 1], { extrapolateRight: "clamp" });
-
   return (
     <AbsoluteFill
       style={{
@@ -358,118 +355,39 @@ const S4: React.FC = () => {
         fontFamily: FONT,
         color: C.dark,
         padding: "26px 36px",
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 28,
+        flexDirection: "column",
+        justifyContent: "center",
       }}
     >
       <ViewLogoCorner opacity={0} />
 
-      {/* left: copy */}
-      <div style={{ flex: 1.5 }}>
-        <div style={{ fontSize: 10, letterSpacing: 3, fontWeight: 700, color: C.primary, opacity: logoOp }}>
-          ÉN SANNHET
-        </div>
-        <h2
-          style={{
-            fontSize: 26,
-            lineHeight: 1.1,
-            fontWeight: 700,
-            letterSpacing: -0.8,
-            margin: "6px 0 0 0",
-            opacity: sp,
-            transform: `translateY(${interpolate(sp, [0, 1], [10, 0])}px)`,
-          }}
-        >
-          Har du <span style={{ color: C.primary, fontStyle: "italic" }}>én sannhet</span> for konsernet?
-        </h2>
-        <div
-          style={{
-            marginTop: 10,
-            fontSize: 15,
-            color: "#555",
-            opacity: sub,
-            lineHeight: 1.4,
-          }}
-        >
-          Få tall du faktisk kan presentere for styret.
-        </div>
+      <div style={{ fontSize: 10, letterSpacing: 3, fontWeight: 700, color: C.primary, opacity: logoOp }}>
+        ÉN SANNHET
       </div>
-
-      {/* right: merge diagram */}
-      <div
+      <h2
         style={{
-          flex: 1,
-          height: 180,
-          position: "relative",
+          fontSize: 38,
+          lineHeight: 1.15,
+          fontWeight: 700,
+          letterSpacing: -0.8,
+          margin: "6px 0 0 0",
           opacity: sp,
+          transform: `translateY(${interpolate(sp, [0, 1], [10, 0])}px)`,
         }}
       >
-        {[0, 1, 2, 3, 4].map((i) => {
-          const startY = (i / 4) * 160 + 10;
-          const endY = 90;
-          const y = startY + (endY - startY) * merge;
-          const x = 20 - merge * 16;
-          const op = 1 - merge * 0.6;
-          return (
-            <div
-              key={i}
-              style={{
-                position: "absolute",
-                left: x,
-                top: y,
-                width: 70,
-                height: 22,
-                borderRadius: 5,
-                background: C.lightest,
-                border: `1px solid ${C.lighter}`,
-                fontSize: 9,
-                letterSpacing: 1.5,
-                fontWeight: 700,
-                color: C.primary,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                opacity: op,
-              }}
-            >
-              ERP {i + 1}
-            </div>
-          );
-        })}
-        {/* arrow */}
-        <div
-          style={{
-            position: "absolute",
-            left: 100,
-            top: 95,
-            width: 60 * merge,
-            height: 2,
-            background: C.medium,
-            opacity: merge,
-          }}
-        />
-        {/* one truth card */}
-        <div
-          style={{
-            position: "absolute",
-            left: 170,
-            top: 65,
-            padding: "14px 18px",
-            borderRadius: 10,
-            background: `linear-gradient(135deg, ${C.primary} 0%, ${C.medium} 100%)`,
-            color: "#fff",
-            fontWeight: 700,
-            fontSize: 14,
-            boxShadow: `0 10px 30px ${C.primary}55`,
-            opacity: merge,
-            transform: `scale(${0.7 + merge * 0.3})`,
-            transformOrigin: "left center",
-            whiteSpace: "nowrap",
-          }}
-        >
-          ÉN SANNHET
-        </div>
+        Har du <span style={{ color: C.primary, fontStyle: "italic" }}>et sannhet</span> for konsernet?
+      </h2>
+      <div
+        style={{
+          marginTop: 14,
+          fontSize: 18,
+          color: "#555",
+          opacity: sub,
+          lineHeight: 1.45,
+          maxWidth: 800,
+        }}
+      >
+        Et ERP for hele konsernet gir CFO er godt datagrunnlag.
       </div>
     </AbsoluteFill>
   );
