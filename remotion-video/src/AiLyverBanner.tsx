@@ -12,7 +12,7 @@ import {
   linearTiming,
 } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
-import { wipe } from "@remotion/transitions/wipe";
+
 import { loadFont as loadInter } from "@remotion/google-fonts/Inter";
 
 const inter = loadInter("normal", {
