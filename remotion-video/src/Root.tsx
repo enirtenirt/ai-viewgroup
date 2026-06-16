@@ -15,7 +15,7 @@ export const RemotionRoot = () => (
     <Composition
       id="banner"
       component={AiLyverBanner}
-      durationInFrames={705}
+      durationInFrames={576}
       fps={30}
       width={980}
       height={300}
