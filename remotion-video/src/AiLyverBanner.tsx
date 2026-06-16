@@ -107,7 +107,7 @@ const S1: React.FC = () => {
       <div
         style={{
           marginTop: 12,
-          fontSize: 18,
+          fontSize: 22,
           color: C.lighter,
           fontStyle: "italic",
           opacity: sub,
