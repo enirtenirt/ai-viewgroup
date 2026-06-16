@@ -474,10 +474,6 @@ export const AiLyverBanner: React.FC = () => {
           <S1 />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 12 })} />
-        <TransitionSeries.Sequence durationInFrames={140}>
-          <S2 />
-        </TransitionSeries.Sequence>
-        <TransitionSeries.Transition presentation={wipe({ direction: "from-right" })} timing={linearTiming({ durationInFrames: 14 })} />
         <TransitionSeries.Sequence durationInFrames={125}>
           <S3 />
         </TransitionSeries.Sequence>
