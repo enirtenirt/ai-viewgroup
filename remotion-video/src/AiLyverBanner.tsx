@@ -387,7 +387,7 @@ const S4: React.FC = () => {
           maxWidth: 800,
         }}
       >
-        Et ERP for hele konsernet gir CFO er godt datagrunnlag.
+        Eller flere ERP-systemer som gjør det vanskelig å få oversikt?
       </div>
     </AbsoluteFill>
   );
