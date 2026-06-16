@@ -36,32 +36,23 @@ const C = {
 
 const FONT = inter.fontFamily;
 
-const LogoBadge: React.FC<{ dark?: boolean }> = ({ dark }) => (
+/* Top-right white VIEW logo (50% larger than original 20px = 30px) */
+const ViewLogoCorner: React.FC<{ opacity?: number }> = ({ opacity = 1 }) => (
   <div
     style={{
-      display: "flex",
-      alignItems: "center",
-      gap: 10,
+      position: "absolute",
+      top: 20,
+      right: 28,
+      opacity,
     }}
   >
     <Img
       src={staticFile("images/view-logo.png")}
       style={{
-        height: 20,
-        filter: dark ? "none" : "brightness(0) invert(1)",
+        height: 30,
+        filter: "brightness(0) invert(1)",
       }}
     />
-    <span
-      style={{
-        fontSize: 9,
-        letterSpacing: 2.5,
-        fontWeight: 700,
-        color: dark ? C.primary : C.light,
-        textTransform: "uppercase",
-      }}
-    >
-      Sertifisert Xledger Partner 2026
-    </span>
   </div>
 );
 
@@ -70,6 +61,7 @@ const S1: React.FC = () => {
   const frame = useCurrentFrame();
   const words = ["AI-en", "din", "kan", "lyve", "til", "styret."];
   const sub = interpolate(frame, [55, 75], [0, 1], { extrapolateRight: "clamp" });
+  const logoOp = interpolate(frame, [0, 14], [0, 1], { extrapolateRight: "clamp" });
 
   return (
     <AbsoluteFill
@@ -81,14 +73,7 @@ const S1: React.FC = () => {
         justifyContent: "center",
       }}
     >
-      <div
-        style={{
-          opacity: interpolate(frame, [0, 14], [0, 1], { extrapolateRight: "clamp" }),
-          marginBottom: 14,
-        }}
-      >
-        <LogoBadge />
-      </div>
+      <ViewLogoCorner opacity={logoOp} />
       <h1
         style={{
           fontSize: 54,
@@ -134,7 +119,7 @@ const S1: React.FC = () => {
   );
 };
 
-/* SCENE 2 — Report wobble */
+/* SCENE 2 — Report wobble (UNCHANGED) */
 const S2: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -158,7 +143,6 @@ const S2: React.FC = () => {
         gap: 26,
       }}
     >
-      {/* left: terminal */}
       <div
         style={{
           flex: 1,
@@ -200,7 +184,6 @@ const S2: React.FC = () => {
         })}
       </div>
 
-      {/* right: report card */}
       <div
         style={{
           flex: 1.1,
@@ -254,110 +237,239 @@ const S2: React.FC = () => {
   );
 };
 
-/* SCENE 3 — Reveal */
+/* SCENE 3 — AI-ready insight */
 const S3: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const sp = spring({ frame: frame - 6, fps, config: { damping: 20, stiffness: 90 } });
-  const sub = interpolate(frame, [35, 55], [0, 1], { extrapolateRight: "clamp" });
+  const logoOp = interpolate(frame, [0, 14], [0, 1], { extrapolateRight: "clamp" });
+
+  // animated "stack" — data layer lights up before model layer
+  const dataPulse = interpolate(frame % 60, [0, 30, 60], [0.4, 1, 0.4]);
+  const modelDim = interpolate(frame, [0, 40], [0.18, 0.28], { extrapolateRight: "clamp" });
+
   return (
     <AbsoluteFill
       style={{
-        background: `radial-gradient(ellipse at center, #5a0f23 0%, #0a0210 100%)`,
+        background: `radial-gradient(ellipse at 70% 50%, ${C.primary} 0%, ${C.dark} 65%, #0a0210 100%)`,
         fontFamily: FONT,
         color: "#fff",
-        justifyContent: "center",
+        padding: "26px 40px",
+        flexDirection: "row",
         alignItems: "center",
-        textAlign: "center",
-        padding: 30,
+        gap: 28,
       }}
     >
-      <h2
-        style={{
-          fontSize: 60,
-          lineHeight: 0.98,
-          fontWeight: 700,
-          letterSpacing: -2,
-          margin: 0,
-          opacity: sp,
-          transform: `scale(${0.92 + sp * 0.08})`,
-        }}
-      >
-        Styret ber om <span style={{ color: C.pop, fontStyle: "italic" }}>forklaring.</span>
-      </h2>
+      <ViewLogoCorner opacity={logoOp} />
+
+      {/* left: headline */}
+      <div style={{ flex: 1.4 }}>
+        <div
+          style={{
+            fontSize: 10,
+            letterSpacing: 3,
+            fontWeight: 700,
+            color: C.light,
+            marginBottom: 10,
+            opacity: sp,
+          }}
+        >
+          INNSIKT
+        </div>
+        <h2
+          style={{
+            fontSize: 30,
+            lineHeight: 1.1,
+            fontWeight: 700,
+            letterSpacing: -0.8,
+            margin: 0,
+            opacity: sp,
+            transform: `translateY(${interpolate(sp, [0, 1], [12, 0])}px)`,
+          }}
+        >
+          <span style={{ color: C.pop, fontStyle: "italic" }}>«AI-ready»</span> begynner med{" "}
+          <span style={{ textDecoration: "underline", textDecorationColor: C.pop, textUnderlineOffset: 4 }}>
+            datagrunnlaget
+          </span>{" "}
+          – ikke modellene.
+        </h2>
+      </div>
+
+      {/* right: layered stack */}
       <div
         style={{
-          marginTop: 12,
-          fontSize: 20,
-          color: C.lighter,
-          fontStyle: "italic",
-          opacity: sub,
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          gap: 8,
+          opacity: sp,
         }}
       >
-        Du har ingen gode svar.
+        {[
+          { label: "AI-MODELLER", weight: modelDim, accent: false },
+          { label: "RAPPORTLAG", weight: modelDim + 0.05, accent: false },
+          { label: "KONSOLIDERING", weight: 0.55, accent: false },
+          { label: "DATAGRUNNLAG", weight: dataPulse, accent: true },
+        ].map((row, i) => (
+          <div
+            key={i}
+            style={{
+              padding: "10px 14px",
+              borderRadius: 8,
+              background: row.accent
+                ? `linear-gradient(90deg, ${C.pop} 0%, ${C.medium} 100%)`
+                : `rgba(255,255,255,${0.04 + row.weight * 0.06})`,
+              border: `1px solid ${row.accent ? C.pop : C.medium + "44"}`,
+              opacity: row.accent ? 1 : 0.45 + row.weight * 0.3,
+              boxShadow: row.accent ? `0 0 26px ${C.pop}66` : "none",
+              fontSize: 11,
+              letterSpacing: 2,
+              fontWeight: 700,
+              color: row.accent ? "#fff" : C.lighter,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span>{row.label}</span>
+            {row.accent && <span style={{ fontSize: 10 }}>← START HER</span>}
+          </div>
+        ))}
       </div>
     </AbsoluteFill>
   );
 };
 
-/* SCENE 4 — Three problems */
+/* SCENE 4 — One truth */
 const S4: React.FC = () => {
   const frame = useCurrentFrame();
-  const titleOp = interpolate(frame, [0, 14], [0, 1], { extrapolateRight: "clamp" });
-  const cards = [
-    { num: "01", title: "Definisjoner", body: "5 ERP. 5 definisjoner av «omsetning»." },
-    { num: "02", title: "Valuta", body: "Konvertert på 5 ulike tidspunkt." },
-    { num: "03", title: "Intercompany", body: "Manuell eliminering. Med hull." },
-  ];
+  const { fps } = useVideoConfig();
+  const sp = spring({ frame: frame - 4, fps, config: { damping: 22, stiffness: 90 } });
+  const sub = interpolate(frame, [30, 55], [0, 1], { extrapolateRight: "clamp" });
+  const logoOp = interpolate(frame, [0, 14], [0, 1], { extrapolateRight: "clamp" });
+
+  // visual: many sources collapse into ONE
+  const merge = interpolate(frame, [10, 60], [0, 1], { extrapolateRight: "clamp" });
+
   return (
     <AbsoluteFill
       style={{
         background: "#fff",
         fontFamily: FONT,
         color: C.dark,
-        padding: "22px 32px",
+        padding: "26px 36px",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 28,
       }}
     >
-      <div style={{ fontSize: 10, letterSpacing: 3, fontWeight: 700, color: C.primary, opacity: titleOp }}>
-        TRE STRUKTURELLE PROBLEMER
+      <ViewLogoCorner opacity={0} />
+
+      {/* left: copy */}
+      <div style={{ flex: 1.5 }}>
+        <div style={{ fontSize: 10, letterSpacing: 3, fontWeight: 700, color: C.primary, opacity: logoOp }}>
+          ÉN SANNHET
+        </div>
+        <h2
+          style={{
+            fontSize: 26,
+            lineHeight: 1.1,
+            fontWeight: 700,
+            letterSpacing: -0.8,
+            margin: "6px 0 0 0",
+            opacity: sp,
+            transform: `translateY(${interpolate(sp, [0, 1], [10, 0])}px)`,
+          }}
+        >
+          Har du <span style={{ color: C.primary, fontStyle: "italic" }}>én sannhet</span> for konsernet?
+        </h2>
+        <div
+          style={{
+            marginTop: 10,
+            fontSize: 15,
+            color: "#555",
+            opacity: sub,
+            lineHeight: 1.4,
+          }}
+        >
+          Få tall du faktisk kan presentere for styret.
+        </div>
       </div>
-      <h2
+
+      {/* right: merge diagram */}
+      <div
         style={{
-          fontSize: 26,
-          lineHeight: 1.05,
-          fontWeight: 700,
-          letterSpacing: -0.8,
-          margin: "6px 0 0 0",
-          opacity: titleOp,
+          flex: 1,
+          height: 180,
+          position: "relative",
+          opacity: sp,
         }}
       >
-        Ingen AI-modell kan{" "}
-        <span style={{ color: C.primary, fontStyle: "italic" }}>kompensere for dem.</span>
-      </h2>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginTop: 16 }}>
-        {cards.map((c, i) => {
-          const d = 18 + i * 9;
-          const op = interpolate(frame, [d, d + 16], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
-          const y = interpolate(frame, [d, d + 20], [14, 0], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+        {[0, 1, 2, 3, 4].map((i) => {
+          const startY = (i / 4) * 160 + 10;
+          const endY = 90;
+          const y = startY + (endY - startY) * merge;
+          const x = 20 - merge * 16;
+          const op = 1 - merge * 0.6;
           return (
             <div
               key={i}
               style={{
+                position: "absolute",
+                left: x,
+                top: y,
+                width: 70,
+                height: 22,
+                borderRadius: 5,
+                background: C.lightest,
+                border: `1px solid ${C.lighter}`,
+                fontSize: 9,
+                letterSpacing: 1.5,
+                fontWeight: 700,
+                color: C.primary,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 opacity: op,
-                transform: `translateY(${y}px)`,
-                border: `1px solid ${C.lightest}`,
-                borderRadius: 10,
-                padding: 12,
-                background: "#fafafa",
               }}
             >
-              <div style={{ fontSize: 10, letterSpacing: 2, color: C.medium, fontWeight: 700 }}>{c.num}</div>
-              <div style={{ fontSize: 16, fontWeight: 700, marginTop: 4, color: C.dark }}>{c.title}</div>
-              <div style={{ fontSize: 11, marginTop: 4, color: "#555", lineHeight: 1.35 }}>{c.body}</div>
+              ERP {i + 1}
             </div>
           );
         })}
+        {/* arrow */}
+        <div
+          style={{
+            position: "absolute",
+            left: 100,
+            top: 95,
+            width: 60 * merge,
+            height: 2,
+            background: C.medium,
+            opacity: merge,
+          }}
+        />
+        {/* one truth card */}
+        <div
+          style={{
+            position: "absolute",
+            left: 170,
+            top: 65,
+            padding: "14px 18px",
+            borderRadius: 10,
+            background: `linear-gradient(135deg, ${C.primary} 0%, ${C.medium} 100%)`,
+            color: "#fff",
+            fontWeight: 700,
+            fontSize: 14,
+            boxShadow: `0 10px 30px ${C.primary}55`,
+            opacity: merge,
+            transform: `scale(${0.7 + merge * 0.3})`,
+            transformOrigin: "left center",
+            whiteSpace: "nowrap",
+          }}
+        >
+          ÉN SANNHET
+        </div>
       </div>
     </AbsoluteFill>
   );
@@ -370,6 +482,7 @@ const S5: React.FC = () => {
   const sp = spring({ frame: frame - 4, fps, config: { damping: 22, stiffness: 90 } });
   const ctaOp = interpolate(frame, [30, 50], [0, 1], { extrapolateRight: "clamp" });
   const pulse = 1 + Math.sin(frame * 0.18) * 0.02;
+  const logoOp = interpolate(frame, [0, 12], [0, 1], { extrapolateRight: "clamp" });
 
   return (
     <AbsoluteFill
@@ -384,33 +497,33 @@ const S5: React.FC = () => {
         gap: 30,
       }}
     >
-      <div style={{ flex: 1.3 }}>
-        <div style={{ marginBottom: 12, opacity: interpolate(frame, [0, 12], [0, 1], { extrapolateRight: "clamp" }) }}>
-          <LogoBadge />
-        </div>
+      <ViewLogoCorner opacity={logoOp} />
+
+      <div style={{ flex: 1.5 }}>
         <h2
           style={{
-            fontSize: 34,
-            lineHeight: 1.05,
+            fontSize: 26,
+            lineHeight: 1.1,
             fontWeight: 700,
-            letterSpacing: -1,
+            letterSpacing: -0.8,
             margin: 0,
             opacity: sp,
             transform: `translateY(${interpolate(sp, [0, 1], [10, 0])}px)`,
           }}
         >
-          Klar for tall du faktisk kan{" "}
-          <span style={{ color: C.pop, fontStyle: "italic" }}>presentere til styret?</span>
+          Opplev <span style={{ color: C.pop, fontStyle: "italic" }}>Xledger</span> gjennom VIEW Group.
         </h2>
         <div
           style={{
             marginTop: 10,
-            fontSize: 16,
+            fontSize: 14,
             color: C.lighter,
             opacity: interpolate(frame, [20, 40], [0, 1], { extrapolateRight: "clamp" }),
+            lineHeight: 1.4,
+            maxWidth: 520,
           }}
         >
-          Opplev ERP-systemet bygget for konsern.
+          Vi hjelper konsern samle forretningsinnsikt i én plattform.
         </div>
       </div>
 
@@ -429,7 +542,7 @@ const S5: React.FC = () => {
           whiteSpace: "nowrap",
         }}
       >
-        Book 20 min demo →
+        Book en demo →
       </div>
     </AbsoluteFill>
   );
@@ -447,7 +560,7 @@ export const AiLyverBanner: React.FC = () => {
           <S2 />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={wipe({ direction: "from-right" })} timing={linearTiming({ durationInFrames: 14 })} />
-        <TransitionSeries.Sequence durationInFrames={80}>
+        <TransitionSeries.Sequence durationInFrames={95}>
           <S3 />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 12 })} />
@@ -455,7 +568,7 @@ export const AiLyverBanner: React.FC = () => {
           <S4 />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 12 })} />
-        <TransitionSeries.Sequence durationInFrames={110}>
+        <TransitionSeries.Sequence durationInFrames={120}>
           <S5 />
         </TransitionSeries.Sequence>
       </TransitionSeries>
