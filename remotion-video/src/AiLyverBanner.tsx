@@ -542,7 +542,7 @@ const S5: React.FC = () => {
           whiteSpace: "nowrap",
         }}
       >
-        Book en demo →
+        Book 20 min demo →
       </div>
     </AbsoluteFill>
   );
@@ -552,23 +552,23 @@ export const AiLyverBanner: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: C.dark }}>
       <TransitionSeries>
-        <TransitionSeries.Sequence durationInFrames={95}>
+        <TransitionSeries.Sequence durationInFrames={125}>
           <S1 />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 12 })} />
-        <TransitionSeries.Sequence durationInFrames={110}>
+        <TransitionSeries.Sequence durationInFrames={140}>
           <S2 />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={wipe({ direction: "from-right" })} timing={linearTiming({ durationInFrames: 14 })} />
-        <TransitionSeries.Sequence durationInFrames={95}>
+        <TransitionSeries.Sequence durationInFrames={125}>
           <S3 />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 12 })} />
-        <TransitionSeries.Sequence durationInFrames={110}>
+        <TransitionSeries.Sequence durationInFrames={140}>
           <S4 />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 12 })} />
-        <TransitionSeries.Sequence durationInFrames={120}>
+        <TransitionSeries.Sequence durationInFrames={150}>
           <S5 />
         </TransitionSeries.Sequence>
       </TransitionSeries>
