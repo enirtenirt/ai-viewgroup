@@ -33,7 +33,7 @@ export const RemotionRoot = () => (
     <Composition
       id="large"
       component={AiLyverLarge}
-      durationInFrames={576}
+      durationInFrames={480}
       fps={30}
       width={980}
       height={600}
