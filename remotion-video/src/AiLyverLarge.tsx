@@ -284,7 +284,7 @@ const S5: React.FC = () => {
           color: C.lighter,
           opacity: interpolate(frame, [20, 40], [0, 1], { extrapolateRight: "clamp" }),
           lineHeight: 1.4,
-          maxWidth: 780,
+          maxWidth: 900,
         }}
       >
         Vi hjelper konsern samle forretningsinnsikt i én plattform.
